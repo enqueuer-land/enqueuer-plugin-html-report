@@ -8,4 +8,4 @@ Enqueuer plugin to enable html-report protocol
 
 
 #### Example
-[!Check it out](https://lopidio.github.io/enqueuer-plugin-html-report/)
+[Check it out](https://lopidio.github.io/enqueuer-plugin-html-report/)
