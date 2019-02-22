@@ -5,3 +5,7 @@ Enqueuer plugin to enable html-report protocol
 #### Usage
     $ npm install enqueuer enqueuer-plugin-html-report
     $ nqr -a <testing-file> -l enqueuer-plugin-html-report
+
+
+#### Example
+[!Check it out](https://lopidio.github.io/enqueuer-plugin-html-report/)
