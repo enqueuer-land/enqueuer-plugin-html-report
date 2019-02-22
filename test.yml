@@ -1,0 +1,9 @@
+name: examples
+files:
+- input.yml
+
+#optional
+outputs:
+-   type: file
+    format: html
+    filename: output.html
