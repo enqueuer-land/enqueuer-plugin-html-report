@@ -1,6 +1,6 @@
 {
   "name": "enqueuer-plugin-html-report",
-  "version": "0.0.7",
+  "version": "0.0.1",
   "description": "Enqueuer html-report plugin",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -18,7 +18,8 @@
   "keywords": [
     "enqueuer",
     "nqr",
-    "html-report",
+    "html",
+    "report",
     "plugin"
   ],
   "author": "Virgs",
