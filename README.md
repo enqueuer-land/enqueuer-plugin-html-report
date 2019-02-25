@@ -4,7 +4,7 @@
 Enqueuer plugin to enable html-report protocol
 #### Usage
     $ npm install enqueuer enqueuer-plugin-html-report
-    $ nqr -a <testing-file> -l enqueuer-plugin-html-report
+    $ nqr conf.yml -l enqueuer-plugin-html-report
 
 
 #### Example

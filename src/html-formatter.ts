@@ -17,8 +17,8 @@ export class HtmlReportFormatter extends ReportFormatter {
             const innerId = 'id' + new StringRandomCreator().create(10);
             const parentId = 'id' + new StringRandomCreator().create(10);
             const inner = requisitionModel.publishers
-                .map(publisher => this.createAccordionCard(innerId, publisher.name, this.createPublisherCard(publisher))).join('');
-            const publishers = this.createAccordion(parentId, this.createAccordionCard(innerId, 'Publishers', inner));
+                .map(publisher => this.createAccordionCard(publisher.name, this.createPublisherCard(publisher))).join('');
+            const publishers = this.createAccordion(parentId, this.createAccordionCard('Publishers', inner, '#D4F2DB'));
             accordionCards += this.createAccordion(parentId, publishers);
         }
 
@@ -26,8 +26,8 @@ export class HtmlReportFormatter extends ReportFormatter {
             const innerId = 'id' + new StringRandomCreator().create(10);
             const parentId = 'id' + new StringRandomCreator().create(10);
             const inner = requisitionModel.subscriptions
-                .map(subscription => this.createAccordionCard(innerId, subscription.name, this.createSubscriptionCard(subscription))).join('');
-            const subscriptions = this.createAccordion(parentId, this.createAccordionCard(innerId, 'Subscriptions', inner));
+                .map(subscription => this.createAccordionCard(subscription.name, this.createSubscriptionCard(subscription))).join('');
+            const subscriptions = this.createAccordion(parentId, this.createAccordionCard('Subscriptions', inner, '#C4BCF2;'));
             accordionCards += this.createAccordion(parentId, subscriptions);
         }
 
@@ -35,8 +35,8 @@ export class HtmlReportFormatter extends ReportFormatter {
             const innerId = 'id' + new StringRandomCreator().create(10);
             const parentId = 'id' + new StringRandomCreator().create(10);
             const inner = requisitionModel.requisitions
-                .map(requisition => this.createAccordionCard(innerId, requisition.name, this.createRequisitionCard(requisition))).join('');
-            const requisitions = this.createAccordion(parentId, this.createAccordionCard(innerId, 'Requisitions', inner));
+                .map(requisition => this.createAccordionCard(requisition.name, this.createRequisitionCard(requisition))).join('');
+            const requisitions = this.createAccordion(parentId, this.createAccordionCard('Requisitions', inner, '#FFE6A7;'));
             accordionCards += this.createAccordion(parentId, requisitions);
         }
 
@@ -48,7 +48,7 @@ export class HtmlReportFormatter extends ReportFormatter {
 
         let body = this.createTestAccordionCard(publisherReport, parentId);
         if (publisherReport.messageReceived) {
-            body += this.createAccordionCard(parentId, 'Message received',
+            body += this.createAccordionCard('Message received',
                 `<pre><code>${JSON.stringify(publisherReport.messageReceived)}</code></pre>`);
         }
         return this.createAccordion(parentId, body);
@@ -58,7 +58,7 @@ export class HtmlReportFormatter extends ReportFormatter {
         const parentId = 'id' + new StringRandomCreator().create(10);
         let body = this.createTestAccordionCard(subscriptionReport, parentId);
         if (subscriptionReport.messageReceived) {
-            body += this.createAccordionCard(parentId, 'Message received',
+            body += this.createAccordionCard('Message received',
                 `<pre><code>${JSON.stringify(subscriptionReport.messageReceived)}</code></pre>`);
         }
         return this.createAccordion(parentId, body);
@@ -76,27 +76,26 @@ export class HtmlReportFormatter extends ReportFormatter {
                 title += ` ${totalTime}ms`;
             }
 
-            return this.createAccordionCard(parentId, 'Tests', this.createTestTable(title, testAnalyzer.getTests()));
+            return this.createAccordionCard('Tests', this.createTestTable(title, testAnalyzer.getTests()));
         }
         return '';
     }
 
     private createAccordion(parentId: string, accordionCards: string, show: boolean = false): string {
-        return `<div class='accordion ${show ? 'show' : ''}' id='${parentId}  mb-1'>
-                    ${accordionCards}
-                 </div>`;
+        return accordionCards;
     }
 
-    private createAccordionCard(parentId: string, title: string, body: string) {
+    private createAccordionCard(title: string, body: string, color?: string) {
+        const parentId = 'id' + new StringRandomCreator().create(10);
         const collapsibleId = 'id' + new StringRandomCreator().create(10);
         return `<div class='card bg-dark mb-0'>
-                    <div class='card-header' id='${parentId}'>
+                    <div class='card-header' id='${parentId}' ${!color ? '' : 'style="background-color: ' + color + '"'}>
                         <a href='#' class='text-white mb-0' data-toggle='collapse' data-target='#${collapsibleId}' style='text-decoration: none;'>
                             <h6>${title}</h6>
                         </a>
                     </div>
                     <div id='${collapsibleId}' class='collapse' data-parent='#${parentId}'>
-                      <div class='card-body bg-light p-2'>
+                      <div class='card-body bg-light px-1 py-2'>
                         ${body}
                       </div>
                     </div>
@@ -108,21 +107,22 @@ export class HtmlReportFormatter extends ReportFormatter {
                 <table class='table table-sm table-striped table-hover table-dark'>
                   <thead>
                     <tr>
-                      <th scope='col'>#</th>
-                      <th scope='col'>Hierarchy</th>
-                      <th scope='col'>Name</th>
-                      <th scope='col'>Description</th>
-                      <th scope='col'>Valid</th>
+                      <th style="word-break:break-all;" scope='col'>#</th>
+                      <th style="word-break:break-all;" scope='col'>Hierarchy</th>
+                      <th style="word-break:break-all;" scope='col'>Name</th>
+                      <th style="word-break:break-all;" scope='col'>Description</th>
+                      <th style="word-break:break-all;" scope='col'>Valid</th>
                     </tr>
                   </thead>
                   <tbody>
                     ${tests.map((test: Test, index: number) => {
             return `<tr>
                                   <th scope='row'>${index + 1}</th>
-                                  <td>${test.hierarchy.join(' › ')}</td>
-                                  <td>${test.test.name}</td>
-                                  <td>${test.test.description}</td>
-                                  <td class='${test.test.valid ? 'bg-success' : 'bg-danger'} text-center' >${test.test.valid}</td>
+                                  <td style="word-break:break-all;">${test.hierarchy.join(' › ')}</td>
+                                  <td style="word-break:break-all;">${test.test.name}</td>
+                                  <td style="word-break:break-all;">${test.test.description}</td>
+                                  <td style="word-break:break-all;"
+                                    class='${test.test.valid ? 'bg-success' : 'bg-danger'} text-center' >${test.test.valid}</td>
                                 </tr>`;
         }).join('')}
                   </tbody>
@@ -144,7 +144,8 @@ export class HtmlReportFormatter extends ReportFormatter {
                   <body>
                     <div class='container-fluid'>
                         <div class='text-center'>
-                            <img src='https://raw.githubusercontent.com/lopidio/enqueuer/develop/docs/images/fullLogo1.png'>
+                            <img src='https://raw.githubusercontent.com/lopidio/enqueuer/develop/docs/images/fullLogo1.png'
+                            style='width:30%; height: auto'>
                         </div>
                         ${body}
                     </div>

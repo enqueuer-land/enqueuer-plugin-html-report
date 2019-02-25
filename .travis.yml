@@ -24,4 +24,5 @@ script:
 - npm run lint
 - npm run build
 - npm link
-- nqr test.yml -l /home/travis/build/lopidio/enqueuer-plugin-html-report && [ -f output.html ]
+- nqr conf.yml -l `pwd`
+- [ -f output.html ]
