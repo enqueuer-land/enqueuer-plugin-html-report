@@ -25,5 +25,4 @@ script:
 - npm run build
 - npm link
 - nqr conf.yml -l `pwd`
-- [ -f output.html ]
 - node_modules/.bin/html5v output.html
