@@ -5,10 +5,11 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "all": "npm run clean && npm run lint && npm run build && npm run updateIndex",
+    "all": "npm run clean && npm run lint && npm run build && npm run updateIndex && npm run validateOutput",
     "build": "tsc",
     "clean": "rm -rf dist",
     "updateIndex": "nqr conf.yml -l `pwd` && mv output.html index.html",
+    "validateOutput": "node_modules/.bin/html5v index.html",
     "lint": "node_modules/.bin/tslint --project tsconfig.json",
     "prepublishOnly": "npm run all"
   },
@@ -31,11 +32,12 @@
   "homepage": "https://github.com/lopidio/enqueuer-plugin-html-report#readme",
   "devDependencies": {
     "@types/node": "^11.9.4",
+    "html5-validator": "^1.2.1",
     "ts-node": "^8.0.2",
     "tslint": "^5.11.0",
-    "typescript": "^3.0.1"
+    "typescript": "^3.3.3333"
   },
   "dependencies": {
-    "enqueuer-plugins-template": "^1.0.5"
+    "enqueuer-plugins-template": "^1.0.7"
   }
 }

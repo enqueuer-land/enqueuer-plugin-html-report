@@ -1,34 +1,58 @@
-import {MainInstance, PublisherModel, SubscriptionModel, RequisitionModel, ReportFormatter, TestsAnalyzer, Test} from 'enqueuer-plugins-template';
+import {MainInstance, PublisherModel, SubscriptionModel, RequisitionModel, TestsAnalyzer, Test, ReportFormatter} from 'enqueuer-plugins-template';
 import {StringRandomCreator} from './string-random-creator';
 
-export class HtmlReportFormatter extends ReportFormatter {
+export class HtmlReportFormatter implements ReportFormatter {
+    private readonly PUBLISHER_COLOR = '#7f8078';
+    private readonly SUBSCRIPTION_COLOR = '#2b3d6b';
+    private readonly REQUISITION_COLOR = '#a68458';
 
     public format(report: RequisitionModel): string {
         const body = this.createRequisitionCard(report);
         return this.createFullHtml(body);
     }
 
+    private static escapeToSafeHtml(text: string): string {
+        return text.replace(/[&<>"]/g, (tag: string) => {
+            const charsToReplace: any = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&#34;'
+            };
+            return charsToReplace[tag] || tag;
+        });
+    }
+
     private createRequisitionCard(requisitionModel: RequisitionModel): string {
-        let accordionCards = this.createTestAccordionCard(requisitionModel);
+        let accordionCards = this.createTestAccordionCard(requisitionModel, this.REQUISITION_COLOR);
 
         if (requisitionModel.publishers && requisitionModel.publishers.length > 0) {
             const inner = requisitionModel.publishers
-                .map(publisher => this.createAccordionCard(publisher.name, this.createPublisherCard(publisher))).join('');
-            const publishers = this.createAccordionCard('Publishers', inner, '#D4F2DB');
+                .map(publisher => this.createAccordionCard(HtmlReportFormatter.escapeToSafeHtml(publisher.name),
+                    this.createPublisherCard(publisher),
+                    this.PUBLISHER_COLOR))
+                .join('');
+            const publishers = this.createAccordionCard('Publishers', inner, this.PUBLISHER_COLOR);
             accordionCards += publishers;
         }
 
         if (requisitionModel.subscriptions && requisitionModel.subscriptions.length > 0) {
             const inner = requisitionModel.subscriptions
-                .map(subscription => this.createAccordionCard(subscription.name, this.createSubscriptionCard(subscription))).join('');
-            const subscriptions = this.createAccordionCard('Subscriptions', inner, '#C4BCF2');
+                .map(subscription => this.createAccordionCard(HtmlReportFormatter.escapeToSafeHtml(subscription.name),
+                    this.createSubscriptionCard(subscription),
+                    this.SUBSCRIPTION_COLOR))
+                .join('');
+            const subscriptions = this.createAccordionCard('Subscriptions', inner, this.SUBSCRIPTION_COLOR);
             accordionCards += subscriptions;
         }
 
         if (requisitionModel.requisitions && requisitionModel.requisitions.length > 0) {
             const inner = requisitionModel.requisitions
-                .map(requisition => this.createAccordionCard(requisition.name, this.createRequisitionCard(requisition))).join('');
-            const requisitions = this.createAccordionCard('Requisitions', inner, '#FFE6A7');
+                .map(requisition => this.createAccordionCard(HtmlReportFormatter.escapeToSafeHtml(requisition.name),
+                    this.createRequisitionCard(requisition),
+                    this.REQUISITION_COLOR))
+                .join('');
+            const requisitions = this.createAccordionCard('Requisitions', inner, this.REQUISITION_COLOR);
             accordionCards += requisitions;
         }
 
@@ -36,24 +60,26 @@ export class HtmlReportFormatter extends ReportFormatter {
     }
 
     private createPublisherCard(publisherReport: PublisherModel): string {
-        let body = this.createTestAccordionCard(publisherReport);
+        let body = this.createTestAccordionCard(publisherReport, this.PUBLISHER_COLOR);
         if (publisherReport.messageReceived) {
             body += this.createAccordionCard('Message received',
-                `<pre><code>${JSON.stringify(publisherReport.messageReceived)}</code></pre>`);
+                `<pre class="p-0 m-0" style="background-color: lightgray"><code>${JSON.stringify(publisherReport.messageReceived)}</code></pre>`,
+                this.PUBLISHER_COLOR);
         }
         return body;
     }
 
     private createSubscriptionCard(subscriptionReport: SubscriptionModel): string {
-        let body = this.createTestAccordionCard(subscriptionReport);
+        let body = this.createTestAccordionCard(subscriptionReport, this.SUBSCRIPTION_COLOR);
         if (subscriptionReport.messageReceived) {
             body += this.createAccordionCard('Message received',
-                `<pre><code>${JSON.stringify(subscriptionReport.messageReceived)}</code></pre>`);
+                `<pre class="p-0 m-0" style="background-color: lightgray"><code>${JSON.stringify(subscriptionReport.messageReceived)}</code></pre>`,
+                this.SUBSCRIPTION_COLOR);
         }
         return body;
     }
 
-    private createTestAccordionCard(report: any) {
+    private createTestAccordionCard(report: any, color: string) {
         const testAnalyzer = new TestsAnalyzer(report);
         const testsNumber = testAnalyzer.getTests().length;
 
@@ -64,32 +90,31 @@ export class HtmlReportFormatter extends ReportFormatter {
                 const totalTime = report.time.totalTime;
                 title += ` ${totalTime}ms`;
             }
-
-            return this.createAccordionCard('Tests' + title, this.createTestTable('', testAnalyzer.getTests()));
+            return this.createAccordionCard(`<span>Tests</span><span class="float-right">${title}</span>`,
+                this.createTestTable(testAnalyzer.getTests()), color);
         }
         return '';
     }
 
-    private createAccordionCard(title: string, body: string, color?: string) {
+    private createAccordionCard(title: string, body: string, color: string) {
         const parentId = 'id' + new StringRandomCreator().create(10);
         const collapsibleId = 'id' + new StringRandomCreator().create(10);
         return `<div class='card bg-dark mb-0'>
-            <div class='card-header' id='${parentId}' ${!color ? '' : 'style="background-color: ' + color + '"'}>
+            <div class='card-header' id='${parentId}' style='background-color: ${color}'>
                 <a href='#' class='text-white mb-0' data-toggle='collapse' data-target='#${collapsibleId}' style='text-decoration: none;'>
                     <h6>${title}</h6>
                 </a>
             </div>
             <div id='${collapsibleId}' class='collapse' data-parent='#${parentId}'>
-              <div class='card-body bg-light px-1 py-2'>
+              <div class='card-body px-1 py-2'>
                 ${body}
               </div>
             </div>
         </div>`;
     }
 
-    private createTestTable(title: string, tests: Test[]): string {
-        return `<h6 class='${tests.every(test => test.test.valid) ? 'text-success' : 'text-danger'} text-right' >${title}</h6>
-                <table class='table table-sm table-striped table-hover table-dark'>
+    private createTestTable(tests: Test[]): string {
+        return `<table class='table table-sm table-striped table-hover table-dark'>
                   <thead>
                     <tr>
                       <th style="word-break:break-all;" scope='col'>#</th>
@@ -105,9 +130,10 @@ export class HtmlReportFormatter extends ReportFormatter {
                       <th scope='row'>${index + 1}</th>
                       <td style="word-break:break-all;">${test.hierarchy
                 .filter((hierarchy: string, index: number) => index > 0)
-                .join(' › ')}</td>
-                      <td style="word-break:break-all;">${test.test.name}</td>
-                      <td style="word-break:break-all;">${test.test.description}</td>
+                .map((hierarchy: string) => HtmlReportFormatter.escapeToSafeHtml(hierarchy))
+                .join(' &gt; ')}</td>
+                      <td style="word-break:break-all;">${HtmlReportFormatter.escapeToSafeHtml(test.test.name)}</td>
+                      <td style="word-break:break-all;">${HtmlReportFormatter.escapeToSafeHtml(test.test.description)}</td>
                       <td style="word-break:break-all;"
                         class='${test.test.valid ? 'bg-success' : 'bg-danger'} text-center' >${test.test.valid}</td>
                     </tr>`;
@@ -128,10 +154,10 @@ export class HtmlReportFormatter extends ReportFormatter {
         integrity='sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO' crossorigin='anonymous'>
     <title>Enqueuer Rocks</title>
   </head>
-  <body>
+  <body style="background-color: lightgray">
     <div class='container-fluid'>
         <div class='text-center'>
-            <img src='https://raw.githubusercontent.com/lopidio/enqueuer/develop/docs/images/fullLogo1.png'
+            <img src='https://raw.githubusercontent.com/lopidio/enqueuer/develop/docs/images/fullLogo1.png' alt="enqueuer logo"
             style='width:30%; height: auto'>
         </div>
         ${body}
