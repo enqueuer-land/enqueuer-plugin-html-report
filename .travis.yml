@@ -3,23 +3,21 @@ language: node_js
 sudo: required
 
 node_js:
-- v10.8.0
+    - v10.8.0
 
 cache:
     directories:
-    - node_modules
+        - node_modules
 
 notifications:
     email:
-        recipients:
-        - guilherme.moraes@outlook.com
         on_success: never
         on_failure: always
 
 script:
-- npm install
-- npm run lint
-- npm run build
-- npm link
-- nqr conf.yml -l `pwd`
-- node_modules/.bin/html5v output.html
+    - npm install
+    - npm run lint
+    - npm run build
+    - npm link
+    - nqr conf.yml -l `pwd`
+    - node_modules/.bin/html5v output.html
