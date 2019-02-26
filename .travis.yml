@@ -16,9 +16,6 @@ notifications:
         on_success: never
         on_failure: always
 
-services:
-- rabbitmq
-
 script:
 - npm install
 - npm run lint
