@@ -38,6 +38,6 @@
     "typescript": "^3.3.3333"
   },
   "dependencies": {
-    "enqueuer-plugins-template": "^1.0.7"
+    "enqueuer-plugins-template": "^1.0.8"
   }
 }

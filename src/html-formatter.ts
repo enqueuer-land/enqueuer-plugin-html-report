@@ -1,4 +1,12 @@
-import {MainInstance, PublisherModel, SubscriptionModel, RequisitionModel, TestsAnalyzer, Test, ReportFormatter} from 'enqueuer-plugins-template';
+import {
+    MainInstance,
+    PublisherModel,
+    SubscriptionModel,
+    RequisitionModel,
+    TestsAnalyzer,
+    AnalyzedTest,
+    ReportFormatter
+} from 'enqueuer-plugins-template';
 import {StringRandomCreator} from './string-random-creator';
 
 export class HtmlReportFormatter implements ReportFormatter {
@@ -80,12 +88,16 @@ export class HtmlReportFormatter implements ReportFormatter {
     }
 
     private createTestAccordionCard(report: any, color: string) {
-        const testAnalyzer = new TestsAnalyzer(report);
+        const testAnalyzer = new TestsAnalyzer().addTest(report);
         const testsNumber = testAnalyzer.getTests().length;
 
         if (testsNumber > 0) {
             const percentage = testAnalyzer.getPercentage();
             let title = `${testAnalyzer.getPassingTests().length}/${testsNumber} (${percentage}%)`;
+            let ignoredList = testAnalyzer.getIgnoredList();
+            if (ignoredList.length > 0) {
+                title += `- ${ignoredList.length} ignored -`;
+            }
             if (report.time) {
                 const totalTime = report.time.totalTime;
                 title += ` ${totalTime}ms`;
@@ -113,7 +125,7 @@ export class HtmlReportFormatter implements ReportFormatter {
         </div>`;
     }
 
-    private createTestTable(tests: Test[]): string {
+    private createTestTable(tests: AnalyzedTest[]): string {
         return `<table class='table table-sm table-striped table-hover table-dark'>
                   <thead>
                     <tr>
@@ -125,17 +137,17 @@ export class HtmlReportFormatter implements ReportFormatter {
                     </tr>
                   </thead>
                   <tbody>
-                    ${tests.map((test: Test, index: number) => {
+                    ${tests.map((test: AnalyzedTest, index: number) => {
             return `<tr>
                       <th scope='row'>${index + 1}</th>
                       <td style="word-break:break-all;">${test.hierarchy
                 .filter((hierarchy: string, index: number) => index > 0)
                 .map((hierarchy: string) => HtmlReportFormatter.escapeToSafeHtml(hierarchy))
                 .join(' &gt; ')}</td>
-                      <td style="word-break:break-all;">${HtmlReportFormatter.escapeToSafeHtml(test.test.name)}</td>
-                      <td style="word-break:break-all;">${HtmlReportFormatter.escapeToSafeHtml(test.test.description)}</td>
+                      <td style="word-break:break-all;">${HtmlReportFormatter.escapeToSafeHtml(test.name)}</td>
+                      <td style="word-break:break-all;">${HtmlReportFormatter.escapeToSafeHtml(test.description)}</td>
                       <td style="word-break:break-all;"
-                        class='${test.test.valid ? 'bg-success' : 'bg-danger'} text-center' >${test.test.valid}</td>
+                        class='${test.valid ? 'bg-success' : 'bg-danger'} text-center' >${test.valid}</td>
                     </tr>`;
         }).join('')}
                   </tbody>
