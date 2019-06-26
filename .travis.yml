@@ -19,5 +19,5 @@ script:
     - npm run lint
     - npm run build
     - npm link
-    - nqr conf.yml -l `pwd`
+    - nqr -c conf.yml -l `pwd`
     - node_modules/.bin/html5v output.html

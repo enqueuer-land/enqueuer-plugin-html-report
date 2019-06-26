@@ -1,13 +1,14 @@
 import {
     MainInstance,
-    PublisherModel,
-    SubscriptionModel,
-    RequisitionModel,
+    OutputPublisherModel as PublisherModel,
+    OutputSubscriptionModel as SubscriptionModel,
+    OutputRequisitionModel as RequisitionModel,
     TestsAnalyzer,
-    AnalyzedTest,
     ReportFormatter
-} from 'enqueuer-plugins-template';
+} from 'enqueuer';
 import {StringRandomCreator} from './string-random-creator';
+import {ReportModel} from 'enqueuer/js/models/outputs/report-model';
+import {TestModel} from 'enqueuer/js/models/outputs/test-model';
 
 export class HtmlReportFormatter implements ReportFormatter {
     private readonly PUBLISHER_COLOR = '#7f8078';
@@ -87,7 +88,7 @@ export class HtmlReportFormatter implements ReportFormatter {
         return body;
     }
 
-    private createTestAccordionCard(report: any, color: string) {
+    private createTestAccordionCard(report: ReportModel, color: string) {
         const testAnalyzer = new TestsAnalyzer().addTest(report);
         const testsNumber = testAnalyzer.getTests().length;
 
@@ -125,25 +126,20 @@ export class HtmlReportFormatter implements ReportFormatter {
         </div>`;
     }
 
-    private createTestTable(tests: AnalyzedTest[]): string {
+    private createTestTable(tests: TestModel[]): string {
         return `<table class='table table-sm table-striped table-hover table-dark'>
                   <thead>
                     <tr>
                       <th style="word-break:break-all;" scope='col'>#</th>
-                      <th style="word-break:break-all;" scope='col'>Hierarchy</th>
                       <th style="word-break:break-all;" scope='col'>Name</th>
                       <th style="word-break:break-all;" scope='col'>Description</th>
                       <th style="word-break:break-all;" scope='col'>Valid</th>
                     </tr>
                   </thead>
                   <tbody>
-                    ${tests.map((test: AnalyzedTest, index: number) => {
+                    ${tests.map((test: TestModel, index: number) => {
             return `<tr>
                       <th scope='row'>${index + 1}</th>
-                      <td style="word-break:break-all;">${test.hierarchy
-                .filter((hierarchy: string, index: number) => index > 0)
-                .map((hierarchy: string) => HtmlReportFormatter.escapeToSafeHtml(hierarchy))
-                .join(' &gt; ')}</td>
                       <td style="word-break:break-all;">${HtmlReportFormatter.escapeToSafeHtml(test.name)}</td>
                       <td style="word-break:break-all;">${HtmlReportFormatter.escapeToSafeHtml(test.description)}</td>
                       <td style="word-break:break-all;"

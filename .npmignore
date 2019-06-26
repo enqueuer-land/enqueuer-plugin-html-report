@@ -8,5 +8,6 @@ coverage
 .idea/
 examples/
 test.yml
+index.html
 conf.yml
 output.html
