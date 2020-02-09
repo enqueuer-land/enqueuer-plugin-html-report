@@ -2,7 +2,7 @@ import {OutputRequisitionModel as RequisitionModel} from 'enqueuer';
 import {ReportModel} from 'enqueuer/js/models/outputs/report-model';
 import {IdCreator} from './id-creator';
 
-type Hierarchy = {
+export type Hierarchy = {
     name: string,
     id: string,
     [propname: string]: any

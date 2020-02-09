@@ -30,6 +30,18 @@
                         background-color: var(--nqr-html-header-background-color);
                     }
 
+                    .enqueuer-header-title {
+                        font-size: 0.8em;
+                        text-align: right;
+                        font-weight: lighter;
+                        color: var(--nqr-html-text-smooth-color);
+                    }
+
+                   .enqueuer-header-tag {
+                        font-size: 0.9em;
+                        text-align: right;
+                    }
+
                     .breadcrumb-item:nth-child(1)::before {
                         display: none !important;
                     }
@@ -88,8 +100,32 @@
                                     {{options.valid ? 'PASS' : 'FAIL'}}
                                 </button>
                                 <span class="col align-self-center pl-3 result-name scroll-div" :style="resultNameStyle">
-                                    {{options.name}}
+                                    {{options.report.name}}
                                 </span>
+
+                               <div class="col-auto align-self-center pt-3">
+                                    <span class="enqueuer-header-title px-1">
+                                        Tests:
+                                    </span>
+                                    <span class="enqueuer-header-tag pr-3" :style="{color: options.valid? 'var(--nqr-html-passing-test-color)': 'var(--nqr-html-failing-test-color)'}">
+                                        {{options.summary}}
+                                    </span>
+<!--                                    <span v-if="tests.getIgnoredList().length > 0" class="enqueuer-header-tag" style="margin-left: 1px; color: var(&#45;&#45;nqr-html-ignored-test-color)">-->
+<!--                                        - {{tests.getIgnoredList().length}} ignored-->
+<!--                                    </span>-->
+                                </div>
+                                <div class="col-auto align-self-center pt-3">
+                                    <span class="enqueuer-header-title">
+                                        Time:
+                                    </span>
+                                    <span class="enqueuer-header-tag pr-3" :style="{color: options.valid? 'var(--nqr-html-passing-test-color)': 'var(--nqr-html-failing-test-color)'}">
+                                        {{options.totalTime}}
+                                    </span>
+                                </div>
+
+
+
+
                             </div>
                         </div>
                     </div>
@@ -100,12 +136,12 @@
                     </div>
                     <div class='container mt-1'>
                         <div class="mx-auto">
-                            <div v-for="(test, index) in filteredTests" class="pb-1 test-item" :style="testItemStyle(test)">
+                            <div v-for="(test, index) in filteredTests" class="ml-2 pb-1 test-item" :style="testItemStyle(test)" data-toggle="collapse" :data-target="'#' + test.id">
 
 
                                 <div class="row no-gutters">
-                                    <div class="col" data-toggle="collapse" :data-target="'#' + test.id">
-                                        <div class="mx-3" style="cursor: pointer;">
+                                    <div class="col" >
+                                        <div class="mx-3">
                                             <div class="px-0 pt-1">
                                                 <ol class="breadcrumb mb-0 p-0" style="background-color: transparent">
                                                     <li class="breadcrumb-item" v-for="(breadCrumb, index) in test.hierarchy" :key="index">
@@ -130,7 +166,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-auto align-self-center pr-1" style="font-size: 0.85em">
+                                    <div class="col-auto align-self-center pr-2" style="font-size: 0.85em">
                                         #{{index + 1}}
                                     </div>
 
@@ -143,7 +179,7 @@
                 new Vue({
                     el: '#app',
                     data: {
-                        options: {"valid":false,"name":"enqueuer","flattenTests":[{"valid":true,"name":"Message received","description":"Subscription has received its message","id":"idGAM3GMtkPJqUSDACLTK2","hierarchy":[{"id":"1814090831_dd49f07c82_717962","name":"test.yml"},{"id":"1814090832_ec23fb6a05_497465","name":"subscription description"},{"name":"onFinish","id":"idsx0YkHL99ssmK4CjarNA"}]},{"name":"Payload","valid":true,"description":"Expected 'payload' to be equal to 'it'. Received 'it'","id":"idc3zf7gC45r8HmYRHnPNo","hierarchy":[{"id":"1814090831_dd49f07c82_717962","name":"test.yml"},{"id":"1814090832_ec23fb6a05_497465","name":"subscription description"},{"name":"onMessageReceived","id":"idl8KmmdR3674r50SOer5t"}]},{"name":"Remote Address","valid":true,"description":"Expected 'remoteInfo.address' to be equal to '127.0.0.1'. Received '127.0.0.1'","id":"idAVe0dSwVmybs3UQihHSS","hierarchy":[{"id":"1814090831_dd49f07c82_717962","name":"test.yml"},{"id":"1814090832_ec23fb6a05_497465","name":"subscription description"},{"name":"onMessageReceived","id":"idsVF1862pQCFjWLCJFzCr"}]},{"name":"Assertion #2","valid":false,"description":"Expecting 'false' to be true. Received: false","id":"idBDCcm3Znqz63ThK5VVk4","hierarchy":[{"id":"1814090831_dd49f07c82_717962","name":"test.yml"},{"id":"1814090832_ec23fb6a05_497465","name":"subscription description"},{"name":"onMessageReceived","id":"idrYS2Lg08AQIRK6CwroMV"}]},{"name":"Published","valid":true,"description":"Published successfully","id":"idYa1idvnLERFTza3f5hxa","hierarchy":[{"id":"1814090831_dd49f07c82_717962","name":"test.yml"},{"id":"1814090832_f1c5db9ba9_756871","name":"publisher description"},{"name":"onFinish","id":"idFTDdcFjtPydEynGncnow"}]}]},
+                        options: {"summary":"4/6 - (66.67%)","totalTime":"16ms","report":{"valid":false,"name":"enqueuer","id":"2038210792_745eb06e33_2810","level":0,"subscriptions":[],"publishers":[],"iteration":0,"totalIterations":1,"hooks":{"onInit":{"valid":true,"tests":[],"arguments":{"elapsedTime":0}},"onFinish":{"valid":true,"tests":[],"arguments":{"elapsedTime":16}},"onParsed":{"valid":true,"tests":[]}},"time":{"startTime":"2020-02-09T23:38:21.795Z","endTime":"2020-02-09T23:38:21.811Z","totalTime":16},"requisitions":[{"valid":false,"name":"test.yml","id":"2038210792_02952e559c_823899","level":1,"subscriptions":[{"id":"2038210792_ec23fb6a05_563676","name":"subscription description","type":"udp","hooks":{"onInit":{"valid":true,"tests":[],"arguments":{"elapsedTime":0}},"onFinish":{"valid":true,"tests":[{"valid":true,"name":"Message received","description":"Subscription has received its message"}],"arguments":{"elapsedTime":11}},"onMessageReceived":{"valid":false,"tests":[{"name":"Payload","valid":true,"description":"Expected 'payload' to be equal to 'it'. Received 'it'"},{"name":"Remote Address","valid":true,"description":"Expected 'remoteInfo.address' to be equal to '127.0.0.1'. Received '127.0.0.1'"},{"name":"Assertion #2","valid":false,"description":"Expecting 'false' to be true. Received: false"}],"arguments":{"payload":{"type":"Buffer","data":[105,116]},"remoteInfo":{"address":"127.0.0.1","family":"IPv4","port":51320,"size":2},"elapsedTime":10}}},"valid":false,"subscriptionTime":"2020-02-09T23:38:21.804Z"}],"publishers":[{"id":"2038210792_f1c5db9ba9_717765","name":"publisher description","valid":true,"hooks":{"onInit":{"arguments":{"elapsedTime":0},"tests":[],"valid":true},"onFinish":{"arguments":{"elapsedTime":11},"tests":[{"name":"Published","valid":true,"description":"Published successfully"}],"valid":true}},"type":"udp","publishTime":"2020-02-09T23:38:21.807Z"}],"iteration":0,"totalIterations":1,"hooks":{"onInit":{"valid":true,"tests":[],"arguments":{"elapsedTime":0}},"onFinish":{"valid":true,"tests":[],"arguments":{"elapsedTime":11}}},"time":{"startTime":"2020-02-09T23:38:21.797Z","endTime":"2020-02-09T23:38:21.809Z","totalTime":12,"timeout":5000},"requisitions":[{"valid":true,"name":"Requisition #0","id":"2038210792_e6ea127e95_482299","level":2,"subscriptions":[],"publishers":[],"iteration":0,"totalIterations":1,"hooks":{"onInit":{"valid":true,"tests":[{"name":"Assertion #0","valid":false,"description":"Expecting 'false' to be true. Received: false","ignored":true}],"arguments":{"elapsedTime":0}},"onFinish":{"valid":true,"tests":[],"arguments":{"elapsedTime":1}}},"time":{"startTime":"2020-02-09T23:38:21.799Z","endTime":"2020-02-09T23:38:21.800Z","totalTime":1,"timeout":5000},"requisitions":[]}]}]},"valid":false,"name":"enqueuer","flattenTests":[{"valid":true,"name":"Message received","description":"Subscription has received its message","id":"idtT4gAcLXDSZ2fDBpYM52","hierarchy":[{"id":"2038210792_02952e559c_823899","name":"test.yml"},{"id":"2038210792_ec23fb6a05_563676","name":"subscription description"},{"name":"onFinish","id":"idRt3c2D7ZxeXaYEonjOXL"}]},{"name":"Payload","valid":true,"description":"Expected 'payload' to be equal to 'it'. Received 'it'","id":"idAtw8kOiHsqnwHjjenXM1","hierarchy":[{"id":"2038210792_02952e559c_823899","name":"test.yml"},{"id":"2038210792_ec23fb6a05_563676","name":"subscription description"},{"name":"onMessageReceived","id":"id7DC8ZidsugA3tEMuGze4"}]},{"name":"Remote Address","valid":true,"description":"Expected 'remoteInfo.address' to be equal to '127.0.0.1'. Received '127.0.0.1'","id":"idadALs1wjkyGOGkUomnPB","hierarchy":[{"id":"2038210792_02952e559c_823899","name":"test.yml"},{"id":"2038210792_ec23fb6a05_563676","name":"subscription description"},{"name":"onMessageReceived","id":"idQEXKpNBEtwsDEY8gMiUW"}]},{"name":"Assertion #2","valid":false,"description":"Expecting 'false' to be true. Received: false","id":"idavzjLSGYzgad5Zd0mWA3","hierarchy":[{"id":"2038210792_02952e559c_823899","name":"test.yml"},{"id":"2038210792_ec23fb6a05_563676","name":"subscription description"},{"name":"onMessageReceived","id":"idypHDbplC8gK1DZnz2FGR"}]},{"name":"Published","valid":true,"description":"Published successfully","id":"id2VxBmnUmD7CtJdftKVJb","hierarchy":[{"id":"2038210792_02952e559c_823899","name":"test.yml"},{"id":"2038210792_f1c5db9ba9_717765","name":"publisher description"},{"name":"onFinish","id":"idKLftUjWHXi0eSmIbk47J"}]},{"name":"Assertion #0","valid":false,"description":"Expecting 'false' to be true. Received: false","ignored":true,"id":"idI4MTU3Jx81v9YQFXCC7F","hierarchy":[{"id":"2038210792_02952e559c_823899","name":"test.yml"},{"id":"2038210792_e6ea127e95_482299","name":"Requisition #0"},{"name":"onInit","id":"ido3mLEdjBjuyTcomgSobY"}]}]},
                         stringFilter: '',
                         showPassingTests: true,
                         showFailingTests: true,
@@ -178,13 +214,15 @@
                         },
                         testItemStyle() {
                              return function (test) {
-                                const style = {};
-                                if (test.valid) {
-                                    style['border-left'] = '4px var(--nqr-html-passing-test-color) solid';
-                                } else if (test.ignored) {
-                                    style['border-left'] = '4px var(--nqr-html-ignored-test-color) solid';
+                                const style = {
+                                    cursor: 'pointer'
+                                };
+                                if (test.ignored) {
+                                    style['border-left'] = '6px var(--nqr-html-ignored-test-color) solid';
+                                } else if (test.valid) {
+                                    style['border-left'] = '6px var(--nqr-html-passing-test-color) solid';
                                 } else {
-                                    style['border-left'] = '4px var(--nqr-html-failing-test-color) solid';
+                                    style['border-left'] = '6px var(--nqr-html-failing-test-color) solid';
                                 }
                                 return style;
                             }

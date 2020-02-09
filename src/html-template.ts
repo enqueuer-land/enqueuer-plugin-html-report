@@ -32,6 +32,18 @@ export class HtmlTemplate {
                         background-color: var(--nqr-html-header-background-color);
                     }
 
+                    .enqueuer-header-title {
+                        font-size: 0.8em;
+                        text-align: right;
+                        font-weight: lighter;
+                        color: var(--nqr-html-text-smooth-color);
+                    }
+
+                   .enqueuer-header-tag {
+                        font-size: 0.9em;
+                        text-align: right;
+                    }
+
                     .breadcrumb-item:nth-child(1)::before {
                         display: none !important;
                     }
@@ -90,8 +102,32 @@ export class HtmlTemplate {
                                     {{options.valid ? 'PASS' : 'FAIL'}}
                                 </button>
                                 <span class="col align-self-center pl-3 result-name scroll-div" :style="resultNameStyle">
-                                    {{options.name}}
+                                    {{options.report.name}}
                                 </span>
+
+                               <div class="col-auto align-self-center pt-3">
+                                    <span class="enqueuer-header-title px-1">
+                                        Tests:
+                                    </span>
+                                    <span class="enqueuer-header-tag pr-3" :style="{color: options.valid? 'var(--nqr-html-passing-test-color)': 'var(--nqr-html-failing-test-color)'}">
+                                        {{options.summary}}
+                                    </span>
+<!--                                    <span v-if="tests.getIgnoredList().length > 0" class="enqueuer-header-tag" style="margin-left: 1px; color: var(&#45;&#45;nqr-html-ignored-test-color)">-->
+<!--                                        - {{tests.getIgnoredList().length}} ignored-->
+<!--                                    </span>-->
+                                </div>
+                                <div class="col-auto align-self-center pt-3">
+                                    <span class="enqueuer-header-title">
+                                        Time:
+                                    </span>
+                                    <span class="enqueuer-header-tag pr-3" :style="{color: options.valid? 'var(--nqr-html-passing-test-color)': 'var(--nqr-html-failing-test-color)'}">
+                                        {{options.totalTime}}
+                                    </span>
+                                </div>
+
+
+
+
                             </div>
                         </div>
                     </div>
@@ -102,12 +138,12 @@ export class HtmlTemplate {
                     </div>
                     <div class='container mt-1'>
                         <div class="mx-auto">
-                            <div v-for="(test, index) in filteredTests" class="pb-1 test-item" :style="testItemStyle(test)">
+                            <div v-for="(test, index) in filteredTests" class="ml-2 pb-1 test-item" :style="testItemStyle(test)" data-toggle="collapse" :data-target="'#' + test.id">
 
 
                                 <div class="row no-gutters">
-                                    <div class="col" data-toggle="collapse" :data-target="'#' + test.id">
-                                        <div class="mx-3" style="cursor: pointer;">
+                                    <div class="col" >
+                                        <div class="mx-3">
                                             <div class="px-0 pt-1">
                                                 <ol class="breadcrumb mb-0 p-0" style="background-color: transparent">
                                                     <li class="breadcrumb-item" v-for="(breadCrumb, index) in test.hierarchy" :key="index">
@@ -132,7 +168,7 @@ export class HtmlTemplate {
                                         </div>
                                     </div>
 
-                                    <div class="col-auto align-self-center pr-1" style="font-size: 0.85em">
+                                    <div class="col-auto align-self-center pr-2" style="font-size: 0.85em">
                                         #{{index + 1}}
                                     </div>
 
@@ -180,13 +216,15 @@ export class HtmlTemplate {
                         },
                         testItemStyle() {
                              return function (test) {
-                                const style = {};
-                                if (test.valid) {
-                                    style['border-left'] = '4px var(--nqr-html-passing-test-color) solid';
-                                } else if (test.ignored) {
-                                    style['border-left'] = '4px var(--nqr-html-ignored-test-color) solid';
+                                const style = {
+                                    cursor: 'pointer'
+                                };
+                                if (test.ignored) {
+                                    style['border-left'] = '6px var(--nqr-html-ignored-test-color) solid';
+                                } else if (test.valid) {
+                                    style['border-left'] = '6px var(--nqr-html-passing-test-color) solid';
                                 } else {
-                                    style['border-left'] = '4px var(--nqr-html-failing-test-color) solid';
+                                    style['border-left'] = '6px var(--nqr-html-failing-test-color) solid';
                                 }
                                 return style;
                             }
