@@ -1,5 +1,5 @@
 export class HtmlTemplate {
-    public static createFullHtml(name: string, flattenedTests: string): string {
+    public static createFullHtml(options: any): string {
         return `<!doctype html>
             <html lang='en'>
               <head>
@@ -38,13 +38,14 @@ export class HtmlTemplate {
                     .breadcrumb-item::before {
                         content: '̷';
                         color: var(--nqr-html-text-smooth-color);
-                        padding: 0 5px;
+                        padding: 0 4px;
                     }
                     .breadcrumb-item {
-                        font-size: 12px;
-                        padding-left: 3px;
+                        font-size: 14px;
+                        padding-left: 2px;
                     }
                     .test-item {
+                        font-size: 16px;
                         color: var(--nqr-html-text-smooth-color);
                     }
                     .test-item:hover {
@@ -76,19 +77,19 @@ export class HtmlTemplate {
               </head>
               <body style="background-color: var(--nqr-html-background-color)">
                 <div id="app">
-                    <div class='enqueuer-header py-4' style="text-align: center">
+                    <div class='enqueuer-header pt-3 pb-2' style="text-align: center">
                         <img src='https://raw.githubusercontent.com/enqueuer-land/enqueuer/master/docs/images/fullLogo3.png' alt="enqueuer logo"
-                        style='width:40%; height: auto'>
+                        style='width:20%; height: auto'>
 
 
                     <div class='container pt-1'>
                         <div class="mx-auto">
                             <div class="row no-gutters pt-1  justify-content-between">
-                                <button type="button" class="btn col-md-auto my-2 px-2 ml-2 test-badge" :style="testBadgeStyle">
-                                    {{valid ? 'PASS' : 'FAIL'}}
+                                <button type="button" class="btn col-auto my-2 px-2 ml-2 test-badge" :style="testBadgeStyle">
+                                    {{options.valid ? 'PASS' : 'FAIL'}}
                                 </button>
                                 <span class="col align-self-center pl-3 result-name scroll-div" :style="resultNameStyle">
-                                    {{name}}
+                                    {{options.name}}
                                 </span>
                             </div>
                         </div>
@@ -98,9 +99,9 @@ export class HtmlTemplate {
 
 
                     </div>
-                    <div class='container'>
+                    <div class='container pt-1'>
                         <div class="mx-auto">
-                            <div v-for="(test, index) in filteredTests" class="pb-3 test-item" :style="testItemStyle(test)">
+                            <div v-for="(test, index) in filteredTests" class="pb-1 mb-1 test-item" :style="testItemStyle(test)">
 
 
                                 <div class="row no-gutters">
@@ -142,18 +143,16 @@ export class HtmlTemplate {
                 new Vue({
                     el: '#app',
                     data: {
-                        valid: !${flattenedTests}.some(test => !test.valid),
+                        options: ${options},
                         stringFilter: '',
                         showPassingTests: true,
                         showFailingTests: true,
                         showIgnoredTests: true,
-                        name: '${name}',
-                        flattenedTests: ${flattenedTests}
                     },
                     computed: {
                         filteredTests() {
                             const stringFilterLowerCase = this.stringFilter.toLowerCase();
-                            return this.flattenedTests
+                            return this.options.flattenTests
                                 .filter(test => (this.showPassingTests && test.valid === true) ||
                                     (this.showFailingTests && test.valid === false) ||
                                     (this.showIgnoredTests && test.ignored === true))
@@ -163,17 +162,18 @@ export class HtmlTemplate {
                         },
                         testBadgeStyle() {
                             return {
-                                'background-color': this.valid ? 'var(--nqr-html-passing-test-color)' : 'var(--nqr-html-failing-test-color)',
+                                'background-color': this.options.valid ? 'var(--nqr-html-passing-test-color)' : 'var(--nqr-html-failing-test-color)',
                                 'color': 'var(--nqr-html-header-background-color)',
+                                'font-size': '25px',
                                 'font-weight': 'bold'
                             }
                         },
                         resultNameStyle() {
                             return {
                                 'text-align': 'left',
-                                'font-size': '30px',
+                                'font-size': '35px',
                                 'max-height': '50px',
-                                color: this.valid ? 'var(--nqr-html-passing-test-color)' : 'var(--nqr-html-failing-test-color)',
+                                color: this.options.valid ? 'var(--nqr-html-passing-test-color)' : 'var(--nqr-html-failing-test-color)',
                             }
                         },
                         testItemStyle() {

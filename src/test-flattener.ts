@@ -5,6 +5,7 @@ import {IdCreator} from './id-creator';
 type Hierarchy = {
     name: string,
     id: string,
+    [propname: string]: any
 };
 
 export class TestFlattener {
