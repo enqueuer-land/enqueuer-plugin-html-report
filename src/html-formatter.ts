@@ -9,23 +9,28 @@ export class HtmlReportFormatter implements ReportFormatter {
     public format(report: RequisitionModel): string {
         const flatten = new TestFlattener().flatten(report);
         return HtmlTemplate.createFullHtml(JSON.stringify({
+            report,
             summary: HtmlReportFormatter.calculateSummary(flatten),
             totalTime: HtmlReportFormatter.prettifyTime(report.time.totalTime),
-            report,
+            ignoredTestsLength: HtmlReportFormatter.getIgnoredTests(flatten),
             valid: !flatten.some(test => test.valid === false),
             name: report.name,
             flattenTests: flatten
         }));
     }
 
-    private static calculateSummary(flatten: Hierarchy[]) {
+    private static calculateSummary(flatten: Hierarchy[]): string {
         const length = flatten.length;
         const passingTests = flatten.reduce((acc, test) => acc - (!test.valid ? 1 : 0), length);
         const percentage = (passingTests * 100 / length).toFixed(2);
         return `${passingTests}/${length} - (${percentage}%)`;
     }
 
-    private static prettifyTime(value: number) {
+    private static getIgnoredTests(flatten: Hierarchy[]): number {
+        return flatten.reduce((acc, test) => acc + (test.ignored ? 1 : 0), 0);
+    }
+
+    private static prettifyTime(value: number): string {
         return value
             .toString()
             .split('')
@@ -38,4 +43,5 @@ export class HtmlReportFormatter implements ReportFormatter {
             .join('')
             .concat('ms');
     }
+
 }

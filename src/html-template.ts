@@ -105,16 +105,16 @@ export class HtmlTemplate {
                                     {{options.report.name}}
                                 </span>
 
-                               <div class="col-auto align-self-center pt-3">
+                               <div class="col-auto align-self-center pt-3 pr-3">
                                     <span class="enqueuer-header-title px-1">
                                         Tests:
                                     </span>
-                                    <span class="enqueuer-header-tag pr-3" :style="{color: options.valid? 'var(--nqr-html-passing-test-color)': 'var(--nqr-html-failing-test-color)'}">
+                                    <span class="enqueuer-header-tag" :style="{color: options.valid? 'var(--nqr-html-passing-test-color)': 'var(--nqr-html-failing-test-color)'}">
                                         {{options.summary}}
                                     </span>
-<!--                                    <span v-if="tests.getIgnoredList().length > 0" class="enqueuer-header-tag" style="margin-left: 1px; color: var(&#45;&#45;nqr-html-ignored-test-color)">-->
-<!--                                        - {{tests.getIgnoredList().length}} ignored-->
-<!--                                    </span>-->
+                                    <span v-if="options.ignoredTestsLength > 0" class="enqueuer-header-tag" style="margin-left: 1px; color: var(--nqr-html-ignored-test-color)">
+                                        - {{options.ignoredTestsLength}} ignored
+                                    </span>
                                 </div>
                                 <div class="col-auto align-self-center pt-3">
                                     <span class="enqueuer-header-title">
@@ -124,10 +124,6 @@ export class HtmlTemplate {
                                         {{options.totalTime}}
                                     </span>
                                 </div>
-
-
-
-
                             </div>
                         </div>
                     </div>
