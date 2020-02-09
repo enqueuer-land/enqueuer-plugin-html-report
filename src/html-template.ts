@@ -1,5 +1,5 @@
 export class HtmlTemplate {
-    public static createFullHtml(flattenedTests: string): string {
+    public static createFullHtml(name: string, flattenedTests: string): string {
         return `<!doctype html>
             <html lang='en'>
               <head>
@@ -51,18 +51,10 @@ export class HtmlTemplate {
                         color: var(--nqr-html-text-color);
                         background-color: var(--nqr-html-background-alternative-color);
                     }
-                    /*.breadcrumb-item a:hover {*/
-                    /*    text-decoration: none;*/
-                    /*    color: var(--nqr-html-text-color);*/
-                    }
-                    .breadcrumb-anchor:hover, .breadcrumb-anchor.hover {
-                        /*color: var(--text-color) !important;*/
-                    }
                     .description-class {
                         font-size: 0.9em;
                         font-weight: lighter;
                         min-height: 32px;
-                        /*border-bottom: 1px solid var(--stacker-header-background-color);*/
                         margin-left: 20px;
                         padding-bottom: 10px;
                     }
@@ -83,49 +75,66 @@ export class HtmlTemplate {
                 <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
               </head>
               <body style="background-color: var(--nqr-html-background-color)">
-                <div class='enqueuer-header py-5' style="text-align: center">
-                    <img src='https://raw.githubusercontent.com/enqueuer-land/enqueuer/master/docs/images/fullLogo3.png' alt="enqueuer logo"
-                    style='width:30%; height: auto'>
-                </div>
-                <div class='container mt-1'>
-                    <div id="app" class="mx-auto">
-                        <div v-for="(test, index) in flattenedTests" class="pb-3 test-item" :style="testItemStyle(test)">
+                <div id="app">
+                    <div class='enqueuer-header py-4' style="text-align: center">
+                        <img src='https://raw.githubusercontent.com/enqueuer-land/enqueuer/master/docs/images/fullLogo3.png' alt="enqueuer logo"
+                        style='width:40%; height: auto'>
 
 
-                            <div class="row no-gutters">
-                                <div class="col" data-toggle="collapse" :data-target="'#' + test.id">
-                                    <div class="ml-1" style="cursor: pointer;">
-                                        <div class="px-0 pt-1">
-                                            <ol class="breadcrumb mb-0 p-0" style="background-color: transparent">
-                                                <li class="breadcrumb-item" v-for="(breadCrumb, index) in test.hierarchy" :key="index">
-                                                    <span class="breadcrumb-anchor">
-                                                        {{breadCrumb.name}}
-                                                    </span>
+                    <div class='container pt-1'>
+                        <div class="mx-auto">
+                            <div class="row no-gutters pt-1  justify-content-between">
+                                <button type="button" class="btn col-md-auto my-2 px-2 ml-2 test-badge" :style="testBadgeStyle">
+                                    {{valid ? 'PASS' : 'FAIL'}}
+                                </button>
+                                <span class="col align-self-center pl-3 result-name scroll-div" :style="resultNameStyle">
+                                    {{name}}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+                    </div>
+                    <div class='container'>
+                        <div class="mx-auto">
+                            <div v-for="(test, index) in filteredTests" class="pb-3 test-item" :style="testItemStyle(test)">
+
+
+                                <div class="row no-gutters">
+                                    <div class="col" data-toggle="collapse" :data-target="'#' + test.id">
+                                        <div class="ml-1" style="cursor: pointer;">
+                                            <div class="px-0 pt-1">
+                                                <ol class="breadcrumb mb-0 p-0" style="background-color: transparent">
+                                                    <li class="breadcrumb-item" v-for="(breadCrumb, index) in test.hierarchy" :key="index">
+                                                        <span class="breadcrumb-anchor">
+                                                            {{breadCrumb.name}}
+                                                        </span>
+                                                    </li>
+                                                </ol>
+                                                <div v-if="test.hierarchy === null || test.hierarchy.length === 0"
+                                                     style="height: 12px"></div>
+                                            </div>
+                                            <div class="pl-1 pt-1">
+                                                {{test.name || "Skipped"}}
+                                            </div>
+                                        </div>
+                                        <div :id="test.id" class="collapse" v-if="test.description">
+                                            <ul class="p-0 m-0 list-unstyled">
+                                                <li class="description-class pt-1 pl-2">
+                                                    {{test.description}}
                                                 </li>
-                                            </ol>
-                                            <div v-if="test.hierarchy === null || test.hierarchy.length === 0"
-                                                 style="height: 12px"></div>
-                                        </div>
-                                        <div class="pl-1 pt-1">
-                                            {{test.name || "Skipped"}}
+                                            </ul>
                                         </div>
                                     </div>
-                                    <div :id="test.id" class="collapse" v-if="test.description">
-                                        <ul class="p-0 m-0 list-unstyled">
-                                            <li class="description-class pt-1 pl-2">
-                                                {{test.description}}
-                                            </li>
-                                        </ul>
+                                    <div class="col-md-auto align-self-center pr-2"
+                                         style="font-size: 0.75em">
+                                        #{{index + 1}}
                                     </div>
-                                </div>
-                                <div class="col-md-auto align-self-center pr-2"
-                                     style="font-size: 0.75em">
-                                    #{{index + 1}}
                                 </div>
                             </div>
-
-
-
                         </div>
                     </div>
                 </div>
@@ -133,9 +142,40 @@ export class HtmlTemplate {
                 new Vue({
                     el: '#app',
                     data: {
+                        valid: !${flattenedTests}.some(test => !test.valid),
+                        stringFilter: '',
+                        showPassingTests: true,
+                        showFailingTests: true,
+                        showIgnoredTests: true,
+                        name: '${name}',
                         flattenedTests: ${flattenedTests}
                     },
                     computed: {
+                        filteredTests() {
+                            const stringFilterLowerCase = this.stringFilter.toLowerCase();
+                            return this.flattenedTests
+                                .filter(test => (this.showPassingTests && test.valid === true) ||
+                                    (this.showFailingTests && test.valid === false) ||
+                                    (this.showIgnoredTests && test.ignored === true))
+                                .filter(test => test.name.toLowerCase().indexOf(stringFilterLowerCase) !== -1 ||
+                                    (test.description.toLowerCase() || '').indexOf(stringFilterLowerCase) !== -1 ||
+                                    test.hierarchy.some(hierarchy => hierarchy.name.toLowerCase().indexOf(stringFilterLowerCase) !== -1));
+                        },
+                        testBadgeStyle() {
+                            return {
+                                'background-color': this.valid ? 'var(--nqr-html-passing-test-color)' : 'var(--nqr-html-failing-test-color)',
+                                'color': 'var(--nqr-html-header-background-color)',
+                                'font-weight': 'bold'
+                            }
+                        },
+                        resultNameStyle() {
+                            return {
+                                'text-align': 'left',
+                                'font-size': '30px',
+                                'max-height': '50px',
+                                color: this.valid ? 'var(--nqr-html-passing-test-color)' : 'var(--nqr-html-failing-test-color)',
+                            }
+                        },
                         testItemStyle() {
                              return function (test) {
                                 const style = {};
