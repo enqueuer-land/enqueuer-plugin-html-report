@@ -15,9 +15,11 @@ subscriptions:
                 -   name: Payload
                     expect: payload
                     toBeEqualTo: `it`
-                -   name: Remote Adderss
+                -   name: Remote Address
                     expect: remoteInfo.address
                     toBeEqualTo: `127.0.0.1`
+                -   name: False
+                    expectToBeTruthy: false
 requisitions:
     -   onInit:
         ignored: true

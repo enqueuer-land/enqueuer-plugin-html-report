@@ -1,4 +1,6 @@
-<!doctype html>
+export class HtmlTemplate {
+    public static createFullHtml(flattenedTests: string): string {
+        return `<!doctype html>
             <html lang='en'>
               <head>
                 <!-- Required meta tags -->
@@ -131,108 +133,7 @@
                 new Vue({
                     el: '#app',
                     data: {
-                        flattenedTests: [
-  {
-    "valid": true,
-    "name": "Message received",
-    "description": "Subscription has received its message",
-    "id": "idR6XPrcUhgdbsnNu1q0fl",
-    "hierarchy": [
-      {
-        "name": "test.yml",
-        "id": "1636590173_dd49f07c82_569817"
-      },
-      {
-        "name": "subscription description",
-        "id": "1636590173_ec23fb6a05_451164"
-      },
-      {
-        "name": "onFinish",
-        "id": "idGCuT238x7vDFVrMYDc7p"
-      }
-    ]
-  },
-  {
-    "name": "Payload",
-    "valid": true,
-    "description": "Expected 'payload' to be equal to 'it'. Received 'it'",
-    "id": "idn5C3H1qiUXJeODsxCRpL",
-    "hierarchy": [
-      {
-        "name": "test.yml",
-        "id": "1636590173_dd49f07c82_569817"
-      },
-      {
-        "name": "subscription description",
-        "id": "1636590173_ec23fb6a05_451164"
-      },
-      {
-        "name": "onMessageReceived",
-        "id": "id76ESxKqrO2ATiHcNkrJv"
-      }
-    ]
-  },
-  {
-    "name": "Remote Address",
-    "valid": true,
-    "description": "Expected 'remoteInfo.address' to be equal to '127.0.0.1'. Received '127.0.0.1'",
-    "id": "idLsBc2iAmCcjnQMrJxWb5",
-    "hierarchy": [
-      {
-        "name": "test.yml",
-        "id": "1636590173_dd49f07c82_569817"
-      },
-      {
-        "name": "subscription description",
-        "id": "1636590173_ec23fb6a05_451164"
-      },
-      {
-        "name": "onMessageReceived",
-        "id": "idlMTVllUwGPvGaA2xU4dc"
-      }
-    ]
-  },
-  {
-    "name": "Assertion #2",
-    "valid": false,
-    "description": "Expecting 'false' to be true. Received: false",
-    "id": "id3MMoff1ayDVNm514R8n3",
-    "hierarchy": [
-      {
-        "name": "test.yml",
-        "id": "1636590173_dd49f07c82_569817"
-      },
-      {
-        "name": "subscription description",
-        "id": "1636590173_ec23fb6a05_451164"
-      },
-      {
-        "name": "onMessageReceived",
-        "id": "id9mcukxQgQtynzNPrihwu"
-      }
-    ]
-  },
-  {
-    "name": "Published",
-    "valid": true,
-    "description": "Published successfully",
-    "id": "idqwPL98OCm2xNmYJOFXWB",
-    "hierarchy": [
-      {
-        "name": "test.yml",
-        "id": "1636590173_dd49f07c82_569817"
-      },
-      {
-        "name": "publisher description",
-        "id": "1636590173_f1c5db9ba9_280503"
-      },
-      {
-        "name": "onFinish",
-        "id": "idz1n9RIqTQ3axYpime7P7"
-      }
-    ]
-  }
-]
+                        flattenedTests: ${flattenedTests}
                     },
                     computed: {
                         testItemStyle() {
@@ -260,4 +161,6 @@
                 <script src='https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js'
                     integrity='sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy' crossorigin='anonymous'></script>
               </body>
-            </html>
+            </html>`;
+    }
+}

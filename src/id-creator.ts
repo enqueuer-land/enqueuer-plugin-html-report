@@ -1,4 +1,4 @@
-export class StringRandomCreator {
+export class IdCreator {
 
     private possible: string;
 
@@ -6,8 +6,8 @@ export class StringRandomCreator {
         this.possible = possible;
     }
 
-    public create = (length: number): string => {
-        let text = '';
+    public create = (length: number = 10): string => {
+        let text = 'id';
 
         for (let i = length; i > 0; --i) {
             text += this.possible.charAt(Math.floor(Math.random() * this.possible.length));

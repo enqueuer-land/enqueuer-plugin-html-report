@@ -1,6 +1,7 @@
 import * as formatter from './html-formatter';
 import {MainInstance} from 'enqueuer';
+import {HtmlReportFormatter} from './html-formatter';
 
 export function entryPoint(mainInstance: MainInstance): void {
-    formatter.entryPoint(mainInstance);
+    mainInstance.reportFormatterManager.addReportFormatter(() => new HtmlReportFormatter(), 'html');
 }
