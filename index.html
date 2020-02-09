@@ -45,6 +45,7 @@
                     .test-item {
                         font-size: 16px;
                         color: var(--nqr-html-text-smooth-color);
+                        border-bottom: 1px solid var(--nqr-html-background-alternative-color);
                     }
                     .test-item:hover {
                         color: var(--nqr-html-text-color);
@@ -97,14 +98,14 @@
 
 
                     </div>
-                    <div class='container pt-1'>
+                    <div class='container mt-1'>
                         <div class="mx-auto">
-                            <div v-for="(test, index) in filteredTests" class="pb-1 mb-1 test-item" :style="testItemStyle(test)">
+                            <div v-for="(test, index) in filteredTests" class="pb-1 test-item" :style="testItemStyle(test)">
 
 
                                 <div class="row no-gutters">
                                     <div class="col" data-toggle="collapse" :data-target="'#' + test.id">
-                                        <div class="ml-1" style="cursor: pointer;">
+                                        <div class="mx-3" style="cursor: pointer;">
                                             <div class="px-0 pt-1">
                                                 <ol class="breadcrumb mb-0 p-0" style="background-color: transparent">
                                                     <li class="breadcrumb-item" v-for="(breadCrumb, index) in test.hierarchy" :key="index">
@@ -128,10 +129,11 @@
                                             </ul>
                                         </div>
                                     </div>
-                                    <div class="col-md-auto align-self-center pr-2"
-                                         style="font-size: 0.75em">
+
+                                    <div class="col-auto align-self-center pr-1" style="font-size: 0.85em">
                                         #{{index + 1}}
                                     </div>
+
                                 </div>
                             </div>
                         </div>
@@ -141,7 +143,7 @@
                 new Vue({
                     el: '#app',
                     data: {
-                        options: {"valid":false,"name":"enqueuer","flattenTests":[{"valid":true,"name":"Message received","description":"Subscription has received its message","id":"idY3EWNvtAMoRv8cNWrdcL","hierarchy":[{"id":"1806250753_dd49f07c82_369481","name":"test.yml"},{"id":"1806250753_ec23fb6a05_217530","name":"subscription description"},{"name":"onFinish","id":"id19fJ9q3FS7JE5dOb2JBz"}]},{"name":"Payload","valid":true,"description":"Expected 'payload' to be equal to 'it'. Received 'it'","id":"id97LjuO1xhowdR2HJiWg2","hierarchy":[{"id":"1806250753_dd49f07c82_369481","name":"test.yml"},{"id":"1806250753_ec23fb6a05_217530","name":"subscription description"},{"name":"onMessageReceived","id":"idxJGm0gi4DhmNZ1j9uEBt"}]},{"name":"Remote Address","valid":true,"description":"Expected 'remoteInfo.address' to be equal to '127.0.0.1'. Received '127.0.0.1'","id":"idsnLxjdntj5oQvGM1kB23","hierarchy":[{"id":"1806250753_dd49f07c82_369481","name":"test.yml"},{"id":"1806250753_ec23fb6a05_217530","name":"subscription description"},{"name":"onMessageReceived","id":"idKKC6ujnrbX52QGbge2NY"}]},{"name":"Assertion #2","valid":false,"description":"Expecting 'false' to be true. Received: false","id":"idwaS9zGulubE6TWF8eLKU","hierarchy":[{"id":"1806250753_dd49f07c82_369481","name":"test.yml"},{"id":"1806250753_ec23fb6a05_217530","name":"subscription description"},{"name":"onMessageReceived","id":"idRC30LoffMHwsQiZOHiae"}]},{"name":"Published","valid":true,"description":"Published successfully","id":"idsrPtPH5Q9IXyEYva5Pe7","hierarchy":[{"id":"1806250753_dd49f07c82_369481","name":"test.yml"},{"id":"1806250753_f1c5db9ba9_18352","name":"publisher description"},{"name":"onFinish","id":"idwdP6YcGe46uNve7E9beu"}]}]},
+                        options: {"valid":false,"name":"enqueuer","flattenTests":[{"valid":true,"name":"Message received","description":"Subscription has received its message","id":"idGAM3GMtkPJqUSDACLTK2","hierarchy":[{"id":"1814090831_dd49f07c82_717962","name":"test.yml"},{"id":"1814090832_ec23fb6a05_497465","name":"subscription description"},{"name":"onFinish","id":"idsx0YkHL99ssmK4CjarNA"}]},{"name":"Payload","valid":true,"description":"Expected 'payload' to be equal to 'it'. Received 'it'","id":"idc3zf7gC45r8HmYRHnPNo","hierarchy":[{"id":"1814090831_dd49f07c82_717962","name":"test.yml"},{"id":"1814090832_ec23fb6a05_497465","name":"subscription description"},{"name":"onMessageReceived","id":"idl8KmmdR3674r50SOer5t"}]},{"name":"Remote Address","valid":true,"description":"Expected 'remoteInfo.address' to be equal to '127.0.0.1'. Received '127.0.0.1'","id":"idAVe0dSwVmybs3UQihHSS","hierarchy":[{"id":"1814090831_dd49f07c82_717962","name":"test.yml"},{"id":"1814090832_ec23fb6a05_497465","name":"subscription description"},{"name":"onMessageReceived","id":"idsVF1862pQCFjWLCJFzCr"}]},{"name":"Assertion #2","valid":false,"description":"Expecting 'false' to be true. Received: false","id":"idBDCcm3Znqz63ThK5VVk4","hierarchy":[{"id":"1814090831_dd49f07c82_717962","name":"test.yml"},{"id":"1814090832_ec23fb6a05_497465","name":"subscription description"},{"name":"onMessageReceived","id":"idrYS2Lg08AQIRK6CwroMV"}]},{"name":"Published","valid":true,"description":"Published successfully","id":"idYa1idvnLERFTza3f5hxa","hierarchy":[{"id":"1814090831_dd49f07c82_717962","name":"test.yml"},{"id":"1814090832_f1c5db9ba9_756871","name":"publisher description"},{"name":"onFinish","id":"idFTDdcFjtPydEynGncnow"}]}]},
                         stringFilter: '',
                         showPassingTests: true,
                         showFailingTests: true,

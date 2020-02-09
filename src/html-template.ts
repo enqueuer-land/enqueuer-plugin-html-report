@@ -47,6 +47,7 @@ export class HtmlTemplate {
                     .test-item {
                         font-size: 16px;
                         color: var(--nqr-html-text-smooth-color);
+                        border-bottom: 1px solid var(--nqr-html-background-alternative-color);
                     }
                     .test-item:hover {
                         color: var(--nqr-html-text-color);
@@ -99,14 +100,14 @@ export class HtmlTemplate {
 
 
                     </div>
-                    <div class='container pt-1'>
+                    <div class='container mt-1'>
                         <div class="mx-auto">
-                            <div v-for="(test, index) in filteredTests" class="pb-1 mb-1 test-item" :style="testItemStyle(test)">
+                            <div v-for="(test, index) in filteredTests" class="pb-1 test-item" :style="testItemStyle(test)">
 
 
                                 <div class="row no-gutters">
                                     <div class="col" data-toggle="collapse" :data-target="'#' + test.id">
-                                        <div class="ml-1" style="cursor: pointer;">
+                                        <div class="mx-3" style="cursor: pointer;">
                                             <div class="px-0 pt-1">
                                                 <ol class="breadcrumb mb-0 p-0" style="background-color: transparent">
                                                     <li class="breadcrumb-item" v-for="(breadCrumb, index) in test.hierarchy" :key="index">
@@ -130,10 +131,11 @@ export class HtmlTemplate {
                                             </ul>
                                         </div>
                                     </div>
-                                    <div class="col-md-auto align-self-center pr-2"
-                                         style="font-size: 0.75em">
+
+                                    <div class="col-auto align-self-center pr-1" style="font-size: 0.85em">
                                         #{{index + 1}}
                                     </div>
+
                                 </div>
                             </div>
                         </div>
