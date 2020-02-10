@@ -7,8 +7,13 @@ Enqueuer plugin to enable good looking html-reports
 
 ![](./screenshot.png)
 
-#### Usage
+#### Installation
     $ npm install enqueuer enqueuer-plugin-html-report
+    
+#### Usage
+Create a [config file](conf.yml) specifying this reporter and other options.
+Then run `enqueuer` using this configuration file.
+
     $ nqr conf.yml -l enqueuer-plugin-html-report
 
 

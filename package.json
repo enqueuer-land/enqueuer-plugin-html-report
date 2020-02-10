@@ -33,9 +33,7 @@
     "@types/node": "^11.15.5",
     "ts-node": "^8.6.2",
     "tslint": "^5.20.1",
-    "typescript": "^3.7.5"
-  },
-  "dependencies": {
+    "typescript": "^3.7.5",
     "enqueuer": "^5.0.3"
   }
 }
