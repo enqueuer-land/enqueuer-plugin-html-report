@@ -15,7 +15,7 @@ export class HtmlTemplate {
                          --nqr-html-requisition-color: #FFE6A7;
                          --nqr-html-publisher-color: #D4F2DB; /*#5e64c3; /*#6A8D73*/;
                          --nqr-html-subscription-color: #C4BCF2; /*c86ba6;*/
-                         --nqr-html-ignored-test-color: #c2a84a;
+                         --nqr-html-ignored-test-color: #d7ba53;
                          --nqr-html-passing-test-color: #9FB630;
                          --nqr-html-failing-test-color: #a9524a;
                          --nqr-html-invalid-color: #a9524a;
@@ -42,6 +42,14 @@ export class HtmlTemplate {
                    .enqueuer-header-tag {
                         font-size: 0.9em;
                         text-align: right;
+                    }
+
+                    .action-button {
+                        transition: all ease 250ms;
+                    }
+
+                    .action-button:hover {
+                        transform: scale(1.5) rotate(10deg);
                     }
 
                     .breadcrumb-item:nth-child(1)::before {
@@ -125,20 +133,27 @@ export class HtmlTemplate {
                                     </span>
                                 </div>
                             </div>
-                        </div>
-                    </div>
 
 
+                            <div class="row no-gutters pt-1">
+                                <div class="pl-1 col-auto pr-1 align-self-center pt-1 align-self-end">
+                                    <span v-for="actionButton in options.actionButtons" @click="actionButtonClicked(actionButton)"
+                                        :style="actionButtonStyle(actionButton)" class="action-button px-1">
+                                        <i :class="actionButton.icon"></i>
+                                    </span>
+                                </div>
+                            </div>
 
-
+                      </div>
+                      </div>
                     </div>
                     <div class='container mt-1'>
                         <div class="mx-auto">
-                            <div v-for="(test, index) in filteredTests" class="ml-2 pb-1 test-item" :style="testItemStyle(test)" data-toggle="collapse" :data-target="'#' + test.id">
-
+                            <div v-for="(test, index) in filteredTests" class="ml-2 pb-1 test-item" :style="testItemStyle(test)"
+                                data-toggle="collapse" :data-target="'#' + test.id">
 
                                 <div class="row no-gutters">
-                                    <div class="col" >
+                                    <div class="col">
                                         <div class="mx-3">
                                             <div class="px-0 pt-1">
                                                 <ol class="breadcrumb mb-0 p-0" style="background-color: transparent">
@@ -151,7 +166,7 @@ export class HtmlTemplate {
                                                 <div v-if="test.hierarchy === null || test.hierarchy.length === 0"
                                                      style="height: 12px"></div>
                                             </div>
-                                            <div class="pl-1 pt-1">
+                                            <div class="pl-1 pt-1" style="text-align: left">
                                                 {{test.name || "Skipped"}}
                                             </div>
                                         </div>
@@ -176,19 +191,28 @@ export class HtmlTemplate {
                 <script>
                 new Vue({
                     el: '#app',
-                    data: {
-                        options: ${options},
-                        stringFilter: '',
-                        showPassingTests: true,
-                        showFailingTests: true,
-                        showIgnoredTests: true,
+                    data() {
+                        const data = {
+                            options: ${options},
+                            stringFilter: '',
+                        };
+                        data.options.actionButtons.forEach(actionButton => data[actionButton.propertyFilterName] = actionButton.active);
+                        return data;
+                    },
+                    methods: {
+                      actionButtonClicked(actionButton) {
+                          this[actionButton.propertyFilterName] = !this[actionButton.propertyFilterName];
+                          actionButton.active = this[actionButton.propertyFilterName];
+                          this[actionButton.propertyFilterName] = actionButton.active;
+                      }
                     },
                     computed: {
                         filteredTests() {
+                            console.log(this.showIgnoredTests)
                             const stringFilterLowerCase = this.stringFilter.toLowerCase();
                             return this.options.flattenTests
-                                .filter(test => (this.showPassingTests && test.valid === true) ||
-                                    (this.showFailingTests && test.valid === false) ||
+                                .filter(test => (this.showPassingTests && test.valid === true && (test.ignored === undefined || test.ignored === false)) ||
+                                    (this.showFailingTests && test.valid === false && (test.ignored === undefined || test.ignored === false)) ||
                                     (this.showIgnoredTests && test.ignored === true))
                                 .filter(test => test.name.toLowerCase().indexOf(stringFilterLowerCase) !== -1 ||
                                     (test.description.toLowerCase() || '').indexOf(stringFilterLowerCase) !== -1 ||
@@ -209,6 +233,20 @@ export class HtmlTemplate {
                                 'max-height': '50px',
                                 color: this.options.valid ? 'var(--nqr-html-passing-test-color)' : 'var(--nqr-html-failing-test-color)',
                             }
+                        },
+                        actionButtonStyle() {
+                          return function(actionButton) {
+                            const style = {
+                                cursor: 'pointer',
+                                color: 'var(--nqr-html-text-smooth-color)',
+                                'font-size': '20px'
+                            };
+                            if (actionButton.active) {
+                                style.color = actionButton.color;
+                                style['font-size'] = '25px';
+                            }
+                            return style
+                          }
                         },
                         testItemStyle() {
                              return function (test) {

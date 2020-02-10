@@ -10,6 +10,7 @@ export class HtmlReportFormatter implements ReportFormatter {
         const flatten = new TestFlattener().flatten(report);
         return HtmlTemplate.createFullHtml(JSON.stringify({
             report,
+            actionButtons: HtmlReportFormatter.createActionButtons(),
             summary: HtmlReportFormatter.calculateSummary(flatten),
             totalTime: HtmlReportFormatter.prettifyTime(report.time.totalTime),
             ignoredTestsLength: HtmlReportFormatter.getIgnoredTests(flatten),
@@ -28,6 +29,30 @@ export class HtmlReportFormatter implements ReportFormatter {
 
     private static getIgnoredTests(flatten: Hierarchy[]): number {
         return flatten.reduce((acc, test) => acc + (test.ignored ? 1 : 0), 0);
+    }
+
+    private static createActionButtons(): object[] {
+        return [
+            {
+                active: true,
+                icon: 'far fa-check-circle',
+                color: '#9FB630',
+                propertyFilterName: 'showPassingTests'
+            },
+            {
+                active: true,
+                icon: 'far fa-times-circle',
+                color: '#a9524a',
+                propertyFilterName: 'showFailingTests'
+            },
+            {
+                active: false,
+                // <i class="fas fa-exclamation"></i>
+                icon: 'fas fa-exclamation-circle',
+                color: '#d7ba53',
+                propertyFilterName: 'showIgnoredTests'
+            },
+        ];
     }
 
     private static prettifyTime(value: number): string {
