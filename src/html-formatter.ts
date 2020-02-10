@@ -14,7 +14,7 @@ export class HtmlReportFormatter implements ReportFormatter {
             actionButtons: HtmlReportFormatter.createActionButtons(),
             summary: HtmlReportFormatter.calculateSummary(flatten),
             totalTime: HtmlReportFormatter.prettifyTime(report.time.totalTime),
-            ignoredTestsLength: HtmlReportFormatter.getIgnoredTests(flatten),
+            ignoredTestsLength: HtmlReportFormatter.getIgnoredTestsLength(flatten),
             valid: !flatten.some(test => test.valid === false),
             name: report.name,
             flattenTests: flatten
@@ -22,13 +22,14 @@ export class HtmlReportFormatter implements ReportFormatter {
     }
 
     private static calculateSummary(flatten: Hierarchy[]): string {
-        const length = flatten.length;
-        const passingTests = flatten.reduce((acc, test) => acc - (!test.valid ? 1 : 0), length);
+        const notIgnoredTests = flatten.filter(test => test.ignored !== true);
+        const length = notIgnoredTests.length;
+        const passingTests = notIgnoredTests.reduce((acc, test) => acc + (test.valid ? 1 : 0), 0);
         const percentage = (passingTests * 100 / length).toFixed(2);
         return `${passingTests}/${length} (${percentage}%)`;
     }
 
-    private static getIgnoredTests(flatten: Hierarchy[]): number {
+    private static getIgnoredTestsLength(flatten: Hierarchy[]): number {
         return flatten.reduce((acc, test) => acc + (test.ignored ? 1 : 0), 0);
     }
 

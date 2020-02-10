@@ -77,6 +77,10 @@ export class HtmlTemplate {
                         color: var(--nqr-html-text-color);
                         background-color: var(--nqr-html-background-alternative-color);
                     }
+                    .test-item:not(.collapsed) {
+                        color: var(--nqr-html-text-color);
+                        background-color: var(--nqr-html-background-alternative-color);
+                    }
                     .description-class {
                         font-size: 0.9em;
                         font-weight: lighter;
@@ -102,7 +106,7 @@ export class HtmlTemplate {
               </head>
               <body style="background-color: var(--nqr-html-background-color)">
                 <div id="app">
-                    <div class='enqueuer-header pt-3 pb-3' style="text-align: center">
+                    <div class='enqueuer-header pt-3 pb-3' style="text-align: center; border-bottom: 1px solid var(--nqr-html-header-background-darker-color)">
                         <img src='https://raw.githubusercontent.com/enqueuer-land/enqueuer/master/docs/images/fullLogo3.png' alt="enqueuer logo"
                         style='width:20%; height: auto'>
 
@@ -175,12 +179,18 @@ export class HtmlTemplate {
                           </div>
                         </div>
                     </div>
-                    <div class='container mt-1'>
+                    <div class='container'>
                         <div class="mx-auto" style="overflow-y: scroll; width: 100%;" id="enqueuer-body" >
-                            <div v-for="test in filteredTests" class="ml-2 pb-1 test-item" :style="testItemStyle(test)"
+                            <div v-for="test in filteredTests" class="ml-2 pb-1 test-item collapsed" style="cursor: pointer"
                                 data-toggle="collapse" :data-target="'#' + test.id">
 
                                 <div class="row no-gutters">
+                                    <div class="col-auto align-self-center pl-3 px-1">
+                                        <i v-if="test.ignored" class="fas fa-times" style="color: var(--nqr-html-ignored-test-color"></i>
+                                        <i v-else-if="test.valid" class="fas fa-check" style="color: var(--nqr-html-passing-test-color"></i>
+                                        <i v-else class="fas fa-times" style="color: var(--nqr-html-failing-test-color"></i>
+                                    </div>
+
                                     <div class="col">
                                         <div class="mx-3">
                                             <div class="px-0 pt-1">
