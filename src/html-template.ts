@@ -102,7 +102,7 @@ export class HtmlTemplate {
               </head>
               <body style="background-color: var(--nqr-html-background-color)">
                 <div id="app">
-                    <div class='enqueuer-header pt-3 pb-2' style="text-align: center">
+                    <div class='enqueuer-header pt-3 pb-3' style="text-align: center">
                         <img src='https://raw.githubusercontent.com/enqueuer-land/enqueuer/master/docs/images/fullLogo3.png' alt="enqueuer logo"
                         style='width:20%; height: auto'>
 
@@ -125,7 +125,7 @@ export class HtmlTemplate {
                                             {{options.summary}}
                                         </span>
                                         <span v-if="options.ignoredTestsLength > 0" class="enqueuer-header-tag" style="margin-left: 1px; color: var(--nqr-html-ignored-test-color)">
-                                            - {{options.ignoredTestsLength}} ignored
+                                            | {{options.ignoredTestsLength}} ignored
                                         </span>
                                     </div>
                                     <div class="col-auto align-self-center pt-3">
@@ -176,8 +176,8 @@ export class HtmlTemplate {
                         </div>
                     </div>
                     <div class='container mt-1'>
-                        <div class="mx-auto">
-                            <div v-for="(test, index) in filteredTests" class="ml-2 pb-1 test-item" :style="testItemStyle(test)"
+                        <div class="mx-auto" style="overflow-y: scroll; width: 100%;" id="enqueuer-body" >
+                            <div v-for="test in filteredTests" class="ml-2 pb-1 test-item" :style="testItemStyle(test)"
                                 data-toggle="collapse" :data-target="'#' + test.id">
 
                                 <div class="row no-gutters">
@@ -208,7 +208,7 @@ export class HtmlTemplate {
                                     </div>
 
                                     <div class="col-auto align-self-center pr-2" style="font-size: 0.85em">
-                                        #{{index + 1}}
+                                        #{{test.index + 1}}
                                     </div>
 
                                 </div>
@@ -227,6 +227,10 @@ export class HtmlTemplate {
                         data.options.actionButtons.forEach(actionButton => data[actionButton.propertyFilterName] = actionButton.active);
                         return data;
                     },
+                    mounted() {
+                        const headerHeight = document.querySelector('.enqueuer-header').offsetHeight;
+                        document.querySelector("#enqueuer-body").style.height = 'calc(100vh - ' + headerHeight + 'px)';
+                    },
                     methods: {
                       actionButtonClicked(actionButton) {
                           this[actionButton.propertyFilterName] = !this[actionButton.propertyFilterName];
@@ -234,13 +238,11 @@ export class HtmlTemplate {
                           this[actionButton.propertyFilterName] = actionButton.active;
                       },
                       stringFilterClear() {
-                          console.log(this.stringFilter)
                           this.stringFilter = '';
                       }
                     },
                     computed: {
                         filteredTests() {
-                            console.log(this.showIgnoredTests)
                             const stringFilterLowerCase = this.stringFilter.toLowerCase();
                             return this.options.flattenTests
                                 .filter(test => (this.showPassingTests && test.valid === true && (test.ignored === undefined || test.ignored === false)) ||

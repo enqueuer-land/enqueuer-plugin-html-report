@@ -8,6 +8,7 @@ import {Hierarchy, TestFlattener} from './test-flattener';
 export class HtmlReportFormatter implements ReportFormatter {
     public format(report: RequisitionModel): string {
         const flatten = new TestFlattener().flatten(report);
+        flatten.forEach((test, index) => test.index = index);
         return HtmlTemplate.createFullHtml(JSON.stringify({
             report,
             actionButtons: HtmlReportFormatter.createActionButtons(),
@@ -24,7 +25,7 @@ export class HtmlReportFormatter implements ReportFormatter {
         const length = flatten.length;
         const passingTests = flatten.reduce((acc, test) => acc - (!test.valid ? 1 : 0), length);
         const percentage = (passingTests * 100 / length).toFixed(2);
-        return `${passingTests}/${length} - (${percentage}%)`;
+        return `${passingTests}/${length} (${percentage}%)`;
     }
 
     private static getIgnoredTests(flatten: Hierarchy[]): number {
