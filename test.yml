@@ -1,3 +1,4 @@
+iterations: 4
 publishers:
   - type: udp
     name: publisher description

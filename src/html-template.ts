@@ -48,12 +48,12 @@ export class HtmlTemplate {
                         box-shadow: none;
                     }
 
-                    .action-button {
+                    .action-button-icon {
                         transition: all ease 250ms;
                     }
 
-                    .action-button:hover {
-                        transform: scale(1.5) rotate(10deg);
+                    .action-button-icon:hover {
+                        transform: scale(1.25) rotate(5deg);
                     }
 
                     .breadcrumb-item:nth-child(1)::before {
@@ -166,8 +166,8 @@ export class HtmlTemplate {
 
                                     <div class="pl-1 col-auto pr-1 align-self-center align-self-end">
                                         <span v-for="actionButton in options.actionButtons" @click="actionButtonClicked(actionButton)"
-                                            :style="actionButtonStyle(actionButton)" class="action-button px-1">
-                                            <i :class="actionButton.icon"></i>
+                                            :style="actionButtonStyle(actionButton)" class="px-1">
+                                            <i :class="[actionButton.icon, 'action-button-icon']"></i>
                                         </span>
                                     </div>
                                 </div>
@@ -194,13 +194,13 @@ export class HtmlTemplate {
                                                 <div v-if="test.hierarchy === null || test.hierarchy.length === 0"
                                                      style="height: 12px"></div>
                                             </div>
-                                            <div class="pl-1 pt-1" style="text-align: left">
+                                            <div class="pl-2 pt-1" style="text-align: left">
                                                 {{test.name || "Skipped"}}
                                             </div>
                                         </div>
                                         <div :id="test.id" class="collapse" v-if="test.description">
                                             <ul class="p-0 m-0 list-unstyled">
-                                                <li class="description-class pt-1 pl-2">
+                                                <li class="description-class pt-1 pl-3">
                                                     {{test.description}}
                                                 </li>
                                             </ul>
