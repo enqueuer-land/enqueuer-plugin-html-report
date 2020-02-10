@@ -42,12 +42,16 @@
                         text-align: right;
                     }
 
+                    .form-control:active, .form-control:focus {
+                        box-shadow: none;
+                    }
+
                     .action-button {
                         transition: all ease 250ms;
                     }
 
                     .action-button:hover {
-                        transform: scale(1.5) rotate(10deg) !important;
+                        transform: scale(1.5) rotate(10deg);
                     }
 
                     .breadcrumb-item:nth-child(1)::before {
@@ -101,49 +105,73 @@
                         style='width:20%; height: auto'>
 
 
-                    <div class='container pt-1'>
-                        <div class="mx-auto">
-                            <div class="row no-gutters pt-1  justify-content-between">
-                                <button type="button" class="btn col-auto my-2 px-2 ml-2 test-badge" :style="testBadgeStyle">
-                                    {{options.valid ? 'PASS' : 'FAIL'}}
-                                </button>
-                                <span class="col align-self-center pl-3 result-name scroll-div" :style="resultNameStyle">
-                                    {{options.report.name}}
-                                </span>
+                        <div class='container pt-1'>
+                            <div class="mx-auto">
+                                <div class="row no-gutters pt-1  justify-content-between">
+                                    <button type="button" class="btn col-auto my-2 px-2 ml-2 test-badge" :style="testBadgeStyle">
+                                        {{options.valid ? 'PASS' : 'FAIL'}}
+                                    </button>
+                                    <span class="col align-self-center pl-3 result-name scroll-div" :style="resultNameStyle">
+                                        {{options.report.name}}
+                                    </span>
 
-                               <div class="col-auto align-self-center pt-3 pr-3">
-                                    <span class="enqueuer-header-title px-1">
-                                        Tests:
-                                    </span>
-                                    <span class="enqueuer-header-tag" :style="{color: options.valid? 'var(--nqr-html-passing-test-color)': 'var(--nqr-html-failing-test-color)'}">
-                                        {{options.summary}}
-                                    </span>
-                                    <span v-if="options.ignoredTestsLength > 0" class="enqueuer-header-tag" style="margin-left: 1px; color: var(--nqr-html-ignored-test-color)">
-                                        - {{options.ignoredTestsLength}} ignored
-                                    </span>
+                                   <div class="col-auto align-self-center pt-3 pr-3">
+                                        <span class="enqueuer-header-title px-1">
+                                            Tests:
+                                        </span>
+                                        <span class="enqueuer-header-tag" :style="{color: options.valid? 'var(--nqr-html-passing-test-color)': 'var(--nqr-html-failing-test-color)'}">
+                                            {{options.summary}}
+                                        </span>
+                                        <span v-if="options.ignoredTestsLength > 0" class="enqueuer-header-tag" style="margin-left: 1px; color: var(--nqr-html-ignored-test-color)">
+                                            - {{options.ignoredTestsLength}} ignored
+                                        </span>
+                                    </div>
+                                    <div class="col-auto align-self-center pt-3">
+                                        <span class="enqueuer-header-title">
+                                            Time:
+                                        </span>
+                                        <span class="enqueuer-header-tag pr-3" :style="{color: options.valid? 'var(--nqr-html-passing-test-color)': 'var(--nqr-html-failing-test-color)'}">
+                                            {{options.totalTime}}
+                                        </span>
+                                    </div>
                                 </div>
-                                <div class="col-auto align-self-center pt-3">
-                                    <span class="enqueuer-header-title">
-                                        Time:
-                                    </span>
-                                    <span class="enqueuer-header-tag pr-3" :style="{color: options.valid? 'var(--nqr-html-passing-test-color)': 'var(--nqr-html-failing-test-color)'}">
-                                        {{options.totalTime}}
-                                    </span>
+
+                                <div class="row no-gutters pt-1">
+                                    <div class="col align-self-center row no-gutters">
+                                        <div class="input-group input-group-sm px-2">
+                                          <div class="input-group-prepend">
+                                            <span class="input-group-text"
+                                                style="background-color: transparent; border: 1px solid var(--nqr-html-background-alternative-color); border-right: none !important;
+                                                border-bottom-left-radius: 10px; border-top-left-radius: 10px">
+                                                    <i class="fas fa-search"></i>
+                                            </span>
+                                          </div>
+                                          <input type="text" class="form-control"
+                                            v-model="stringFilter"
+                                            placeholder="Filter"
+                                            style="background-color: transparent; border: 1px solid var(--nqr-html-background-alternative-color);
+                                            border-left: none !important; border-right: none !important; color: var(--nqr-html-text-color)">
+                                          <div class="input-group-append">
+                                            <span class="input-group-text"
+                                                @click="stringFilterClear"
+                                                style="background-color: transparent; border: 1px solid var(--nqr-html-background-alternative-color); border-left: none !important;
+                                                border-bottom-right-radius: 10px; border-top-right-radius: 10px; cursor: pointer">
+                                                    <i class="fas fa-times-circle"></i>
+                                                </span>
+                                          </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="pl-1 col-auto pr-1 align-self-center align-self-end">
+                                        <span v-for="actionButton in options.actionButtons" @click="actionButtonClicked(actionButton)"
+                                             class="action-button px-1">
+                                            <i :class="actionButton.icon"></i>
+                                        </span>
+                                    </div>
                                 </div>
-                            </div>
 
-
-                            <div class="row no-gutters pt-1">
-                                <div class="pl-1 col-auto pr-1 align-self-center pt-1 align-self-end">
-                                    <span v-for="actionButton in options.actionButtons" @click="actionButtonClicked(actionButton)"
-                                        :style="actionButtonStyle(actionButton)" class="action-button px-1">
-                                        <i :class="actionButton.icon"></i>
-                                    </span>
-                                </div>
-                            </div>
-
-                      </div>
-                      </div>
+                          </div>
+                        </div>
                     </div>
                     <div class='container mt-1'>
                         <div class="mx-auto">
@@ -191,7 +219,7 @@
                     el: '#app',
                     data() {
                         const data = {
-                            options: {"report":{"valid":false,"name":"enqueuer","id":"2142260229_745eb06e33_883981","level":0,"subscriptions":[],"publishers":[],"iteration":0,"totalIterations":1,"hooks":{"onInit":{"valid":true,"tests":[],"arguments":{"elapsedTime":0}},"onFinish":{"valid":true,"tests":[],"arguments":{"elapsedTime":14}},"onParsed":{"valid":true,"tests":[]}},"time":{"startTime":"2020-02-10T00:42:26.232Z","endTime":"2020-02-10T00:42:26.246Z","totalTime":14},"requisitions":[{"valid":false,"name":"test.yml","id":"2142260229_02952e559c_679962","level":1,"subscriptions":[{"id":"2142260230_ec23fb6a05_503078","name":"subscription description","type":"udp","hooks":{"onInit":{"valid":true,"tests":[],"arguments":{"elapsedTime":0}},"onFinish":{"valid":true,"tests":[{"valid":true,"name":"Message received","description":"Subscription has received its message"}],"arguments":{"elapsedTime":10}},"onMessageReceived":{"valid":false,"tests":[{"name":"Payload","valid":true,"description":"Expected 'payload' to be equal to 'it'. Received 'it'"},{"name":"Remote Address","valid":true,"description":"Expected 'remoteInfo.address' to be equal to '127.0.0.1'. Received '127.0.0.1'"},{"name":"Assertion #2","valid":false,"description":"Expecting 'false' to be true. Received: false"}],"arguments":{"payload":{"type":"Buffer","data":[105,116]},"remoteInfo":{"address":"127.0.0.1","family":"IPv4","port":62746,"size":2},"elapsedTime":9}}},"valid":false,"subscriptionTime":"2020-02-10T00:42:26.240Z"}],"publishers":[{"id":"2142260229_f1c5db9ba9_996668","name":"publisher description","valid":true,"hooks":{"onInit":{"arguments":{"elapsedTime":0},"tests":[],"valid":true},"onFinish":{"arguments":{"elapsedTime":9},"tests":[{"name":"Published","valid":true,"description":"Published successfully"}],"valid":true}},"type":"udp","publishTime":"2020-02-10T00:42:26.243Z"}],"iteration":0,"totalIterations":1,"hooks":{"onInit":{"valid":true,"tests":[],"arguments":{"elapsedTime":0}},"onFinish":{"valid":true,"tests":[],"arguments":{"elapsedTime":10}}},"time":{"startTime":"2020-02-10T00:42:26.234Z","endTime":"2020-02-10T00:42:26.245Z","totalTime":11,"timeout":5000},"requisitions":[{"valid":true,"name":"Requisition #0","id":"2142260229_e6ea127e95_47980","level":2,"subscriptions":[],"publishers":[],"iteration":0,"totalIterations":1,"hooks":{"onInit":{"valid":true,"tests":[{"name":"Assertion #0","valid":false,"description":"Expecting 'false' to be true. Received: false","ignored":true}],"arguments":{"elapsedTime":0}},"onFinish":{"valid":true,"tests":[],"arguments":{"elapsedTime":1}}},"time":{"startTime":"2020-02-10T00:42:26.236Z","endTime":"2020-02-10T00:42:26.237Z","totalTime":1,"timeout":5000},"requisitions":[]}]}]},"actionButtons":[{"active":true,"icon":"far fa-check-circle","color":"#9FB630","propertyFilterName":"showPassingTests"},{"active":true,"icon":"far fa-times-circle","color":"#a9524a","propertyFilterName":"showFailingTests"},{"active":false,"icon":"fas fa-exclamation-circle","color":"#d7ba53","propertyFilterName":"showIgnoredTests"}],"summary":"4/6 - (66.67%)","totalTime":"14ms","ignoredTestsLength":1,"valid":false,"name":"enqueuer","flattenTests":[{"valid":true,"name":"Message received","description":"Subscription has received its message","id":"idPzfiKVYPGvuql7oKsCEQ","hierarchy":[{"id":"2142260229_02952e559c_679962","name":"test.yml"},{"id":"2142260230_ec23fb6a05_503078","name":"subscription description"},{"name":"onFinish","id":"idHPYFiLMWgzYQf9papHiO"}]},{"name":"Payload","valid":true,"description":"Expected 'payload' to be equal to 'it'. Received 'it'","id":"id4OE8ymfu508LWYSxWPKU","hierarchy":[{"id":"2142260229_02952e559c_679962","name":"test.yml"},{"id":"2142260230_ec23fb6a05_503078","name":"subscription description"},{"name":"onMessageReceived","id":"id6JXRuMD15VCW1p3ZjIhY"}]},{"name":"Remote Address","valid":true,"description":"Expected 'remoteInfo.address' to be equal to '127.0.0.1'. Received '127.0.0.1'","id":"id0CAgz69cds9qEAncz3pp","hierarchy":[{"id":"2142260229_02952e559c_679962","name":"test.yml"},{"id":"2142260230_ec23fb6a05_503078","name":"subscription description"},{"name":"onMessageReceived","id":"id1IbrPBCGjWDAkdo9n49N"}]},{"name":"Assertion #2","valid":false,"description":"Expecting 'false' to be true. Received: false","id":"idGl1zBp6G11A12RfsYPHG","hierarchy":[{"id":"2142260229_02952e559c_679962","name":"test.yml"},{"id":"2142260230_ec23fb6a05_503078","name":"subscription description"},{"name":"onMessageReceived","id":"ideV7Z8ToVJnHnyX7Wv2uw"}]},{"name":"Published","valid":true,"description":"Published successfully","id":"id7GHaX6Bsmd5V5ELNfaBC","hierarchy":[{"id":"2142260229_02952e559c_679962","name":"test.yml"},{"id":"2142260229_f1c5db9ba9_996668","name":"publisher description"},{"name":"onFinish","id":"idcNoKLuqHfRjto6bSKys9"}]},{"name":"Assertion #0","valid":false,"description":"Expecting 'false' to be true. Received: false","ignored":true,"id":"idGQ3IEfKxYgbwvmRmXV76","hierarchy":[{"id":"2142260229_02952e559c_679962","name":"test.yml"},{"id":"2142260229_e6ea127e95_47980","name":"Requisition #0"},{"name":"onInit","id":"iddglps5AkA6oiwJ9tyZGS"}]}]},
+                            options: {"report":{"valid":false,"name":"enqueuer","id":"2211530882_745eb06e33_515783","level":0,"subscriptions":[],"publishers":[],"iteration":0,"totalIterations":1,"hooks":{"onInit":{"valid":true,"tests":[],"arguments":{"elapsedTime":0}},"onFinish":{"valid":true,"tests":[],"arguments":{"elapsedTime":17}},"onParsed":{"valid":true,"tests":[]}},"time":{"startTime":"2020-02-10T01:11:53.885Z","endTime":"2020-02-10T01:11:53.902Z","totalTime":17},"requisitions":[{"valid":false,"name":"test.yml","id":"2211530882_02952e559c_736100","level":1,"subscriptions":[{"id":"2211530882_ec23fb6a05_138638","name":"subscription description","type":"udp","hooks":{"onInit":{"valid":true,"tests":[],"arguments":{"elapsedTime":0}},"onFinish":{"valid":true,"tests":[{"valid":true,"name":"Message received","description":"Subscription has received its message"}],"arguments":{"elapsedTime":11}},"onMessageReceived":{"valid":false,"tests":[{"name":"Payload","valid":true,"description":"Expected 'payload' to be equal to 'it'. Received 'it'"},{"name":"Remote Address","valid":true,"description":"Expected 'remoteInfo.address' to be equal to '127.0.0.1'. Received '127.0.0.1'"},{"name":"Assertion #2","valid":false,"description":"Expecting 'false' to be true. Received: false"}],"arguments":{"payload":{"type":"Buffer","data":[105,116]},"remoteInfo":{"address":"127.0.0.1","family":"IPv4","port":65166,"size":2},"elapsedTime":10}}},"valid":false,"subscriptionTime":"2020-02-10T01:11:53.894Z"}],"publishers":[{"id":"2211530882_f1c5db9ba9_180718","name":"publisher description","valid":true,"hooks":{"onInit":{"arguments":{"elapsedTime":0},"tests":[],"valid":true},"onFinish":{"arguments":{"elapsedTime":11},"tests":[{"name":"Published","valid":true,"description":"Published successfully"}],"valid":true}},"type":"udp","publishTime":"2020-02-10T01:11:53.897Z"}],"iteration":0,"totalIterations":1,"hooks":{"onInit":{"valid":true,"tests":[],"arguments":{"elapsedTime":0}},"onFinish":{"valid":true,"tests":[],"arguments":{"elapsedTime":11}}},"time":{"startTime":"2020-02-10T01:11:53.888Z","endTime":"2020-02-10T01:11:53.900Z","totalTime":12,"timeout":5000},"requisitions":[{"valid":true,"name":"Requisition #0","id":"2211530882_e6ea127e95_97415","level":2,"subscriptions":[],"publishers":[],"iteration":0,"totalIterations":1,"hooks":{"onInit":{"valid":true,"tests":[{"name":"Assertion #0","valid":false,"description":"Expecting 'false' to be true. Received: false","ignored":true}],"arguments":{"elapsedTime":0}},"onFinish":{"valid":true,"tests":[],"arguments":{"elapsedTime":2}}},"time":{"startTime":"2020-02-10T01:11:53.889Z","endTime":"2020-02-10T01:11:53.891Z","totalTime":2,"timeout":5000},"requisitions":[]}]}]},"actionButtons":[{"active":true,"icon":"far fa-check-circle","color":"#9FB630","propertyFilterName":"showPassingTests"},{"active":true,"icon":"far fa-times-circle","color":"#a9524a","propertyFilterName":"showFailingTests"},{"active":false,"icon":"fas fa-exclamation-circle","color":"#d7ba53","propertyFilterName":"showIgnoredTests"}],"summary":"4/6 - (66.67%)","totalTime":"17ms","ignoredTestsLength":1,"valid":false,"name":"enqueuer","flattenTests":[{"valid":true,"name":"Message received","description":"Subscription has received its message","id":"id95zw9QbMmP4fEg0WRb1e","hierarchy":[{"id":"2211530882_02952e559c_736100","name":"test.yml"},{"id":"2211530882_ec23fb6a05_138638","name":"subscription description"},{"name":"onFinish","id":"id3kOwNAnLllLG3lvVgNVF"}]},{"name":"Payload","valid":true,"description":"Expected 'payload' to be equal to 'it'. Received 'it'","id":"idMuFkJehgVLM28O7nRWcI","hierarchy":[{"id":"2211530882_02952e559c_736100","name":"test.yml"},{"id":"2211530882_ec23fb6a05_138638","name":"subscription description"},{"name":"onMessageReceived","id":"idazvr1iip3vS7pHdn56AM"}]},{"name":"Remote Address","valid":true,"description":"Expected 'remoteInfo.address' to be equal to '127.0.0.1'. Received '127.0.0.1'","id":"idRBAIBZi4ltIRqBdnQ9jR","hierarchy":[{"id":"2211530882_02952e559c_736100","name":"test.yml"},{"id":"2211530882_ec23fb6a05_138638","name":"subscription description"},{"name":"onMessageReceived","id":"idDtEjGeL5v9yiMRxBuhSR"}]},{"name":"Assertion #2","valid":false,"description":"Expecting 'false' to be true. Received: false","id":"idOt90ugpuF2rVrA9pU2J5","hierarchy":[{"id":"2211530882_02952e559c_736100","name":"test.yml"},{"id":"2211530882_ec23fb6a05_138638","name":"subscription description"},{"name":"onMessageReceived","id":"id2B1Xx2cigi2dJ9jxb63C"}]},{"name":"Published","valid":true,"description":"Published successfully","id":"idIAtfzyrUyzxj10TZV5cY","hierarchy":[{"id":"2211530882_02952e559c_736100","name":"test.yml"},{"id":"2211530882_f1c5db9ba9_180718","name":"publisher description"},{"name":"onFinish","id":"idNPSUy8NhY6qLxKr2qrFO"}]},{"name":"Assertion #0","valid":false,"description":"Expecting 'false' to be true. Received: false","ignored":true,"id":"id5eMS1dhysYsizGGStZ2h","hierarchy":[{"id":"2211530882_02952e559c_736100","name":"test.yml"},{"id":"2211530882_e6ea127e95_97415","name":"Requisition #0"},{"name":"onInit","id":"id2Ky4PCnErp1HE1HO4DIF"}]}]},
                             stringFilter: '',
                         };
                         data.options.actionButtons.forEach(actionButton => data[actionButton.propertyFilterName] = actionButton.active);
@@ -202,6 +230,10 @@
                           this[actionButton.propertyFilterName] = !this[actionButton.propertyFilterName];
                           actionButton.active = this[actionButton.propertyFilterName];
                           this[actionButton.propertyFilterName] = actionButton.active;
+                      },
+                      stringFilterClear() {
+                          console.log(this.stringFilter)
+                          this.stringFilter = '';
                       }
                     },
                     computed: {

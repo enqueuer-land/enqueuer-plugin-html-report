@@ -44,6 +44,10 @@ export class HtmlTemplate {
                         text-align: right;
                     }
 
+                    .form-control:active, .form-control:focus {
+                        box-shadow: none;
+                    }
+
                     .action-button {
                         transition: all ease 250ms;
                     }
@@ -103,49 +107,73 @@ export class HtmlTemplate {
                         style='width:20%; height: auto'>
 
 
-                    <div class='container pt-1'>
-                        <div class="mx-auto">
-                            <div class="row no-gutters pt-1  justify-content-between">
-                                <button type="button" class="btn col-auto my-2 px-2 ml-2 test-badge" :style="testBadgeStyle">
-                                    {{options.valid ? 'PASS' : 'FAIL'}}
-                                </button>
-                                <span class="col align-self-center pl-3 result-name scroll-div" :style="resultNameStyle">
-                                    {{options.report.name}}
-                                </span>
+                        <div class='container pt-1'>
+                            <div class="mx-auto">
+                                <div class="row no-gutters pt-1  justify-content-between">
+                                    <button type="button" class="btn col-auto my-2 px-2 ml-2 test-badge" :style="testBadgeStyle">
+                                        {{options.valid ? 'PASS' : 'FAIL'}}
+                                    </button>
+                                    <span class="col align-self-center pl-3 result-name scroll-div" :style="resultNameStyle">
+                                        {{options.report.name}}
+                                    </span>
 
-                               <div class="col-auto align-self-center pt-3 pr-3">
-                                    <span class="enqueuer-header-title px-1">
-                                        Tests:
-                                    </span>
-                                    <span class="enqueuer-header-tag" :style="{color: options.valid? 'var(--nqr-html-passing-test-color)': 'var(--nqr-html-failing-test-color)'}">
-                                        {{options.summary}}
-                                    </span>
-                                    <span v-if="options.ignoredTestsLength > 0" class="enqueuer-header-tag" style="margin-left: 1px; color: var(--nqr-html-ignored-test-color)">
-                                        - {{options.ignoredTestsLength}} ignored
-                                    </span>
+                                   <div class="col-auto align-self-center pt-3 pr-3">
+                                        <span class="enqueuer-header-title px-1">
+                                            Tests:
+                                        </span>
+                                        <span class="enqueuer-header-tag" :style="{color: options.valid? 'var(--nqr-html-passing-test-color)': 'var(--nqr-html-failing-test-color)'}">
+                                            {{options.summary}}
+                                        </span>
+                                        <span v-if="options.ignoredTestsLength > 0" class="enqueuer-header-tag" style="margin-left: 1px; color: var(--nqr-html-ignored-test-color)">
+                                            - {{options.ignoredTestsLength}} ignored
+                                        </span>
+                                    </div>
+                                    <div class="col-auto align-self-center pt-3">
+                                        <span class="enqueuer-header-title">
+                                            Time:
+                                        </span>
+                                        <span class="enqueuer-header-tag pr-3" :style="{color: options.valid? 'var(--nqr-html-passing-test-color)': 'var(--nqr-html-failing-test-color)'}">
+                                            {{options.totalTime}}
+                                        </span>
+                                    </div>
                                 </div>
-                                <div class="col-auto align-self-center pt-3">
-                                    <span class="enqueuer-header-title">
-                                        Time:
-                                    </span>
-                                    <span class="enqueuer-header-tag pr-3" :style="{color: options.valid? 'var(--nqr-html-passing-test-color)': 'var(--nqr-html-failing-test-color)'}">
-                                        {{options.totalTime}}
-                                    </span>
+
+                                <div class="row no-gutters pt-1">
+                                    <div class="col align-self-center row no-gutters">
+                                        <div class="input-group input-group-sm px-2">
+                                          <div class="input-group-prepend">
+                                            <span class="input-group-text"
+                                                style="background-color: transparent; border: 1px solid var(--nqr-html-background-alternative-color); border-right: none !important;
+                                                border-bottom-left-radius: 10px; border-top-left-radius: 10px">
+                                                    <i class="fas fa-search"></i>
+                                            </span>
+                                          </div>
+                                          <input type="text" class="form-control"
+                                            v-model="stringFilter"
+                                            placeholder="Filter"
+                                            style="background-color: transparent; border: 1px solid var(--nqr-html-background-alternative-color);
+                                            border-left: none !important; border-right: none !important; color: var(--nqr-html-text-color)">
+                                          <div class="input-group-append">
+                                            <span class="input-group-text"
+                                                @click="stringFilterClear"
+                                                style="background-color: transparent; border: 1px solid var(--nqr-html-background-alternative-color); border-left: none !important;
+                                                border-bottom-right-radius: 10px; border-top-right-radius: 10px; cursor: pointer">
+                                                    <i class="fas fa-times-circle"></i>
+                                                </span>
+                                          </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="pl-1 col-auto pr-1 align-self-center align-self-end">
+                                        <span v-for="actionButton in options.actionButtons" @click="actionButtonClicked(actionButton)"
+                                            :style="actionButtonStyle(actionButton)" class="action-button px-1">
+                                            <i :class="actionButton.icon"></i>
+                                        </span>
+                                    </div>
                                 </div>
-                            </div>
 
-
-                            <div class="row no-gutters pt-1">
-                                <div class="pl-1 col-auto pr-1 align-self-center pt-1 align-self-end">
-                                    <span v-for="actionButton in options.actionButtons" @click="actionButtonClicked(actionButton)"
-                                        :style="actionButtonStyle(actionButton)" class="action-button px-1">
-                                        <i :class="actionButton.icon"></i>
-                                    </span>
-                                </div>
-                            </div>
-
-                      </div>
-                      </div>
+                          </div>
+                        </div>
                     </div>
                     <div class='container mt-1'>
                         <div class="mx-auto">
@@ -204,6 +232,10 @@ export class HtmlTemplate {
                           this[actionButton.propertyFilterName] = !this[actionButton.propertyFilterName];
                           actionButton.active = this[actionButton.propertyFilterName];
                           this[actionButton.propertyFilterName] = actionButton.active;
+                      },
+                      stringFilterClear() {
+                          console.log(this.stringFilter)
+                          this.stringFilter = '';
                       }
                     },
                     computed: {
