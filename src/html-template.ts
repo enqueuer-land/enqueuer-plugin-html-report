@@ -186,9 +186,9 @@ export class HtmlTemplate {
 
                                 <div class="row no-gutters">
                                     <div class="col-auto align-self-center pl-3 px-1">
-                                        <i v-if="test.ignored" class="fas fa-times" style="color: var(--nqr-html-ignored-test-color"></i>
-                                        <i v-else-if="test.valid" class="fas fa-check" style="color: var(--nqr-html-passing-test-color"></i>
-                                        <i v-else class="fas fa-times" style="color: var(--nqr-html-failing-test-color"></i>
+                                        <i v-if="test.ignored" class="fas fa-times" style="color: var(--nqr-html-ignored-test-color)"></i>
+                                        <i v-else-if="test.valid" class="fas fa-check" style="color: var(--nqr-html-passing-test-color)"></i>
+                                        <i v-else class="fas fa-times" style="color: var(--nqr-html-failing-test-color)"></i>
                                     </div>
 
                                     <div class="col">
