@@ -31,7 +31,7 @@
   "homepage": "https://github.com/enqueuer-land/enqueuer-plugin-html-report#readme",
   "devDependencies": {
     "@types/node": "^11.15.5",
-    "enqueuer": "^5.0.4",
+    "enqueuer": "^6.0.0",
     "ts-node": "^8.6.2",
     "tslint": "^5.20.1",
     "typescript": "^3.7.5"
