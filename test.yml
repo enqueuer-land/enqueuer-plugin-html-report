@@ -1,29 +1,31 @@
-iterations: 4
-publishers:
-  - type: udp
-    name: publisher description
-    serverAddress: localhost
-    port: 23072
-    payload: it
-subscriptions:
-  - name: subscription description
-    type: udp
-    port: 23072
-    timeout: 1000
+actuators:
+  - type: http
+    url: http://localhost:23075/resource
+    method: POST
+    headers:
+      requestHeaderKey: requestHeaderValue
+    payload: enqueuer
+    onResponseReceived:
+      assertions:
+        - expect: statusCode
+          toBeGreaterThan: 400
+        - expect: body
+          toBeEqualTo: "'blah'"
+        - expect: headers.responseheaderkey
+          toBeEqualTo: "'responseHeaderValue'"
+sensors:
+  - type: http
+    endpoint: /resource
+    port: 23075
+    method: POST
+    response:
+      headers:
+        responseHeaderKey: responseHeaderValue
+      status: 444
+      payload: blah
     onMessageReceived:
-      script: payload = Buffer.from(payload);
       assertions:
-        - name: Payload
-          expect: payload
-          toBeEqualTo: `it`
-        - name: Remote Address
-          expect: remoteInfo.address
-          toBeEqualTo: `127.0.0.1`
-        - name: False
-          expectToBeTruthy: false
-requisitions:
-  - onInit:
-      assertions:
-        - ignore: true
-          expectToBeTruthy: false
-
+        - expect: body
+          toContain: "'queue'"
+        - expect: headers.requestheaderkey
+          toBeEqualTo: "'requestHeaderValue'"

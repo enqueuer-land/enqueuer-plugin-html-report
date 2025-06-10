@@ -1,6 +1,6 @@
 export class HtmlTemplate {
-    public static createFullHtml(options: any): string {
-        return `<!doctype html>
+  public static createFullHtml(options: any): string {
+    return `<!doctype html>
             <html lang='en'>
               <head>
                 <!-- Required meta tags -->
@@ -180,7 +180,7 @@ export class HtmlTemplate {
                         </div>
                     </div>
                     <div class='container'>
-                        <div class="mx-auto" style="overflow-y: scroll; width: 100%;" id="enqueuer-body" >
+                        <div class="mx-auto" style="overflow: auto; overflow-x: none width: 100%;" id="enqueuer-body" >
                             <div v-for="test in filteredTests" class="ml-2 pb-1 test-item collapsed" style="cursor: pointer"
                                 data-toggle="collapse" :data-target="'#' + test.id">
 
@@ -320,5 +320,5 @@ export class HtmlTemplate {
                     integrity='sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy' crossorigin='anonymous'></script>
               </body>
             </html>`;
-    }
+  }
 }
